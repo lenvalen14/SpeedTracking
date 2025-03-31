@@ -14,6 +14,7 @@ public class AccountDTO {
     private String accountId;
     private String name;
     private String email;
+    private String password;
     private AccountRole role;
     private Boolean status;
     private LocalDateTime createAt;
