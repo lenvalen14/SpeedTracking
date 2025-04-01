@@ -1,7 +1,9 @@
 package edu.ut.its.models.dtos.requests;
 
 import edu.ut.its.models.emuns.AccountRole;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,12 +21,17 @@ public class AccountRegisterRequest {
     private String name;
 
     @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
     private String email;
 
     @NotBlank(message = "Password is required")
-
+    @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
+
     private AccountRole role;
-    private Boolean status;
+
+    @Builder.Default
+    private boolean status = true;
+
     private LocalDateTime createAt;
 }

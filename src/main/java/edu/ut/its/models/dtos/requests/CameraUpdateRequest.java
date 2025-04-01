@@ -1,6 +1,7 @@
 package edu.ut.its.models.dtos.requests;
 
 import edu.ut.its.models.dtos.StreetDTO;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CameraCreateRequest {
+public class CameraUpdateRequest {
+    @NotBlank(message = "Camera ID is required")
+    private String cameraId;
     private StreetDTO street;
-
-    @Builder.Default
-    private boolean status = true;
+    private Boolean status;
 }

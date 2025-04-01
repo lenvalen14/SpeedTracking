@@ -1,6 +1,6 @@
 package edu.ut.its.services;
 
-import edu.ut.its.models.dtos.CameraDTO;
+import edu.ut.its.models.dtos.responses.CameraDetailResponse;
 import edu.ut.its.models.entitys.Camera;
 import edu.ut.its.models.entitys.Street;
 import edu.ut.its.repositories.CameraRepo;
@@ -23,17 +23,17 @@ public class CameraService implements ICameraService {
     private Mapper mapper;
 
     @Override
-    public List<CameraDTO> getAllCameras() {
-        return mapper.convertToDtoList(cameraRepo.findAllByStatusTrue(), CameraDTO.class);
+    public List<CameraDetailResponse> getAllCameras() {
+        return mapper.convertToDtoList(cameraRepo.findAllByStatusTrue(), CameraDetailResponse.class);
     }
 
     @Override
-    public Optional<CameraDTO> getCameraById(String id) {
-        return cameraRepo.findByCameraIdAndStatusTrue(id).map(cam -> mapper.convertToDto(cam, CameraDTO.class));
+    public Optional<CameraDetailResponse> getCameraById(String id) {
+        return cameraRepo.findByCameraIdAndStatusTrue(id).map(cam -> mapper.convertToDto(cam, CameraDetailResponse.class));
     }
 
     @Override
-    public CameraDTO createCamera(CameraDTO cameraDTO) {
+    public CameraDetailResponse createCamera(CameraDetailResponse cameraDTO) {
 
         Street street = streetRepo.findById(cameraDTO.getStreet().getStreetId())
                 .orElseThrow(() -> new RuntimeException("Street not found"));
@@ -46,11 +46,11 @@ public class CameraService implements ICameraService {
 
         updateStreetCameraCount(street);
 
-        return mapper.convertToDto(savedCamera, CameraDTO.class);
+        return mapper.convertToDto(savedCamera, CameraDetailResponse.class);
     }
 
     @Override
-    public CameraDTO updateCamera(String id, CameraDTO cameraDTO) {
+    public CameraDetailResponse updateCamera(String id, CameraDetailResponse cameraDTO) {
         Camera existingCamera = cameraRepo.findByCameraIdAndStatusTrue(id)
                 .orElseThrow(() -> new RuntimeException("Camera not found"));
 
@@ -63,7 +63,7 @@ public class CameraService implements ICameraService {
 
         updateStreetCameraCount(street);
 
-        return mapper.convertToDto(updatedCamera, CameraDTO.class);
+        return mapper.convertToDto(updatedCamera, CameraDetailResponse.class);
     }
 
     @Override

@@ -1,14 +1,14 @@
 package edu.ut.its.services;
 
-import edu.ut.its.models.dtos.CameraDTO;
+import edu.ut.its.models.dtos.responses.CameraDetailResponse;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ICameraService {
-    List<CameraDTO> getAllCameras();
-    Optional<CameraDTO> getCameraById(String id);
-    CameraDTO createCamera(CameraDTO cameraDTO);
-    CameraDTO updateCamera(String id, CameraDTO cameraDTO);
+    List<CameraDetailResponse> getAllCameras();
+    Optional<CameraDetailResponse> getCameraById(String id);
+    CameraDetailResponse createCamera(CameraDetailResponse cameraDTO);
+    CameraDetailResponse updateCamera(String id, CameraDetailResponse cameraDTO);
     void deleteCamera(String id);
 }
