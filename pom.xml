@@ -15,7 +15,7 @@
     <groupId>edu.ut.its</groupId>
     <artifactId>ITS_Monitoring_Speed</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <name>ITS Monitoring Speed</name>
     <description>Monitoring vehicle speed using ITS</description>
