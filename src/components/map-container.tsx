@@ -6,7 +6,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
 
 const MapComponent = () => {
-  const position: [number, number] = [51.505, -0.09]; // Đặt vị trí cho bản đồ
+  const position: [number, number] = [10.56071680,  106.64976230]; // Đặt vị trí cho bản đồ
 
   return (
     <MapContainer center={position} zoom={13} style={{ height: "100%", width: "100%" , borderRadius: "10px"}}>
@@ -16,9 +16,9 @@ const MapComponent = () => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
       {/* Marker trên bản đồ */}
-      <Marker position={position} icon={new L.Icon.Default()}>
+      {/* <Marker position={position} icon={new L.Icon.Default()}>
         <Popup>Welcome to London!</Popup>
-      </Marker>
+      </Marker> */}
     </MapContainer>
   );
 };
