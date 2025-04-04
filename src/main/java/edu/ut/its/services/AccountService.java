@@ -1,5 +1,6 @@
 package edu.ut.its.services;
 
+import edu.ut.its.exceptions.DataNotFoundException;
 import edu.ut.its.mapper.AccountMapper;
 import edu.ut.its.mapper.ViolationMapper;
 import edu.ut.its.models.dtos.responses.AccountDetailResponse;
@@ -35,8 +36,10 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public Optional<AccountDetailResponse> getAccountById(String id) {
-        return accountRepo.findByAccountIdAndStatusTrue(id).map(acc -> mapper.convertToDto(acc, AccountDetailResponse.class));
+    public AccountDetailResponse getAccountById(String id) {
+        Account account = accountRepo.findByAccountIdAndStatusTrue(id).orElseThrow(()->new DataNotFoundException("Account not found"));
+
+        return accountMapper.toAccountDTO(account);
     }
 
     @Override
@@ -56,7 +59,7 @@ public class AccountService implements IAccountService {
         account.setRole(AccountRole.USER);
         account.setStatus(true);
 
-        return mapper.convertToDto(accountRepo.save(account), AccountDetailResponse.class);
+        return accountMapper.toAccountDTO(accountRepo.save(account));
     }
 
 
@@ -74,7 +77,7 @@ public class AccountService implements IAccountService {
         existing.setRole(accountDTO.getRole());
         existing.setStatus(accountDTO.getStatus());
 
-        return mapper.convertToDto(accountRepo.save(existing), AccountDetailResponse.class);
+        return accountMapper.toAccountDTO(accountRepo.save(existing));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package edu.ut.its.services;
 
+import edu.ut.its.exceptions.DataNotFoundException;
 import edu.ut.its.mapper.ViolationMapper;
 import edu.ut.its.models.dtos.ViolationDTO;
 import edu.ut.its.models.entitys.Street;
@@ -33,13 +34,23 @@ public class ViolationService implements IViolationService {
 
     @Override
     public List<ViolationDTO> getAllViolations() {
-        return mapper.convertToDtoList(violationRepo.findAll(), ViolationDTO.class);
+        List<ViolationDTO> violationDTOS = violationRepo.findAll()
+                .stream()
+                .map(violationMapper::toViolationDTO)
+                .toList();
+
+        if (violationDTOS.isEmpty()) {
+            throw new DataNotFoundException("List of violations is empty");
+        }
+
+        return violationDTOS;
     }
 
     @Override
-    public Optional<ViolationDTO> getViolationById(String id) {
-        return violationRepo.findById(id)
-                .map(v -> mapper.convertToDto(v, ViolationDTO.class));
+    public ViolationDTO getViolationById(String id) {
+        Violation violation = violationRepo.findById(id).orElseThrow(() -> new DataNotFoundException("Violation not found"));
+
+        return violationMapper.toViolationDTO(violation);
     }
 
     @Override
@@ -60,7 +71,7 @@ public class ViolationService implements IViolationService {
         violation.setEvidence(violationDTO.getEvidence());
         violation.setCreateAt(LocalDateTime.now());
 
-        return mapper.convertToDto(violationRepo.save(violation), ViolationDTO.class);
+        return violationMapper.toViolationDTO(violationRepo.save(violation));
     }
 
     @Override
@@ -82,6 +93,6 @@ public class ViolationService implements IViolationService {
         existingViolation.setEvidence(violationDTO.getEvidence());
         existingViolation.setCreateAt(LocalDateTime.now());
 
-        return mapper.convertToDto(violationRepo.save(existingViolation), ViolationDTO.class);
+        return violationMapper.toViolationDTO(violationRepo.save(existingViolation));
     }
 }

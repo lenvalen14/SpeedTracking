@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface IAccountService {
     List<AccountDetailResponse> getAllAccounts();
-    Optional<AccountDetailResponse> getAccountById(String id);
+    AccountDetailResponse getAccountById(String id);
     AccountDetailResponse createAccount(AccountDetailResponse accountDTO);
     AccountDetailResponse updateAccount(String id, AccountDetailResponse accountDTO);
     void deleteAccount(String id);
