@@ -1,5 +1,6 @@
 package edu.ut.its.services;
 
+import edu.ut.its.exceptions.DataNotFoundException;
 import edu.ut.its.mapper.VehicleMapper;
 import edu.ut.its.models.dtos.VehicleDTO;
 import edu.ut.its.models.entitys.Vehicle;
@@ -21,19 +22,30 @@ public class VehicleService implements IVehicleService {
 
     @Override
     public List<VehicleDTO> getAllVehicles() {
-        return mapper.convertToDtoList(vehicleRepo.findAll(), VehicleDTO.class);
+        List<VehicleDTO> vehiclesDTO = vehicleRepo.findAll()
+                .stream()
+                .map(vehicleMapper::toVehicleDTO)
+                .toList();
+        if (vehiclesDTO.isEmpty()) {
+            throw new DataNotFoundException("No vehicle found");
+        }
+        return vehiclesDTO;
     }
 
     @Override
-    public Optional<VehicleDTO> getVehicleById(String id) {
-        return vehicleRepo.findById(id)
-                .map(v -> mapper.convertToDto(v, VehicleDTO.class));
+    public VehicleDTO getVehicleById(String id) {
+        Vehicle vehicle = vehicleRepo.findById(id).orElseThrow(() -> new DataNotFoundException("vehicle not found"));
+        return vehicleMapper.toVehicleDTO(vehicle);
     }
 
     @Override
     public VehicleDTO createVehicle(VehicleDTO vehicleDTO) {
-        Vehicle vehicle = mapper.convertToEntity(vehicleDTO, Vehicle.class);
-        return mapper.convertToDto(vehicleRepo.save(vehicle), VehicleDTO.class);
+        Vehicle vehicle = vehicleRepo.existsVehicleByLicensePlates(vehicleDTO.getLicensePlates());
+        if (vehicle == null) {
+            Vehicle newVehicle = vehicleRepo.save(vehicleMapper.toVehicle(vehicleDTO));
+            return vehicleMapper.toVehicleDTO(newVehicle);
+        }
+        return vehicleMapper.toVehicleDTO(vehicle);
     }
 
     @Override
@@ -45,6 +57,6 @@ public class VehicleService implements IVehicleService {
         existing.setType(vehicleDTO.getType());
         existing.setPriority(vehicleDTO.isPriority());
 
-        return mapper.convertToDto(vehicleRepo.save(existing), VehicleDTO.class);
+        return vehicleMapper.toVehicleDTO(vehicleRepo.save(existing));
     }
 }

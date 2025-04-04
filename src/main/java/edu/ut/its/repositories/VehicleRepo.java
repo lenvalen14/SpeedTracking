@@ -5,6 +5,9 @@ import edu.ut.its.models.entitys.Vehicle;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface VehicleRepo extends MongoRepository<Vehicle, String> {
+    Vehicle existsVehicleByLicensePlates(String licensePlate);
 }
