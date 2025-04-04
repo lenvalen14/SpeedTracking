@@ -17,6 +17,6 @@ public interface AccountMapper {
 
     Account toAccount(AccountRegisterRequest request);
 
-    void updateAccountFromRequest(AccountUpdateRequest request, @MappingTarget Account account);\
+    void updateAccountFromRequest(AccountUpdateRequest request, @MappingTarget Account account);
 
 }

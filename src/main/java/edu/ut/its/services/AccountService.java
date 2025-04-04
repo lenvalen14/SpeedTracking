@@ -2,6 +2,7 @@ package edu.ut.its.services;
 
 import edu.ut.its.mapper.AccountMapper;
 import edu.ut.its.mapper.ViolationMapper;
+import edu.ut.its.models.dtos.requests.AccountUpdateRequest;
 import edu.ut.its.models.dtos.responses.AccountDetailResponse;
 import edu.ut.its.models.emuns.AccountRole;
 import edu.ut.its.models.entitys.Account;
@@ -35,8 +36,10 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public Optional<AccountDetailResponse> getAccountById(String id) {
-        return accountRepo.findByAccountIdAndStatusTrue(id).map(acc -> mapper.convertToDto(acc, AccountDetailResponse.class));
+    public AccountDetailResponse getAccountById(String id) {
+        Account account = accountRepo.findByAccountIdAndStatusTrue(id)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+        return accountMapper.toAccountDTO(account);
     }
 
     @Override
@@ -56,25 +59,21 @@ public class AccountService implements IAccountService {
         account.setRole(AccountRole.USER);
         account.setStatus(true);
 
-        return mapper.convertToDto(accountRepo.save(account), AccountDetailResponse.class);
+        return accountMapper.toAccountDTO(accountRepo.save(account));
     }
 
 
     @Override
-    public AccountDetailResponse updateAccount(String id, AccountDetailResponse accountDTO) {
+    public AccountDetailResponse updateAccount(String id, AccountUpdateRequest accountDTO) {
         Account existing = accountRepo.findByAccountIdAndStatusTrue(id).orElseThrow(() -> new RuntimeException("Account not found"));
 
         if (!existing.getEmail().equals(accountDTO.getEmail()) && accountRepo.existsByEmail(accountDTO.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
 
-        existing.setName(accountDTO.getName());
-        existing.setEmail(accountDTO.getEmail());
+        accountMapper.updateAccountFromRequest(accountDTO, existing);
 
-        existing.setRole(accountDTO.getRole());
-        existing.setStatus(accountDTO.getStatus());
-
-        return mapper.convertToDto(accountRepo.save(existing), AccountDetailResponse.class);
+        return accountMapper.toAccountDTO(accountRepo.save(existing));
     }
 
     @Override
