@@ -1,5 +1,6 @@
 package edu.ut.its.models.dtos;
 
+import edu.ut.its.models.dtos.responses.StreetDetailResponse;
 import edu.ut.its.models.emuns.ViolationLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 public class ViolationDTO {
     private String violationId;
     private VehicleDTO vehicle;
-    private StreetDTO street;
+    private StreetDetailResponse street;
     private float speedRecorded;
     private ViolationLevel violationLevel;
     private String evidence;

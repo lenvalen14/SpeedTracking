@@ -1,10 +1,15 @@
 package edu.ut.its.services;
 
-import edu.ut.its.models.dtos.StreetDTO;
+import edu.ut.its.exceptions.DataNotFoundException;
+import edu.ut.its.mapper.StreetMapper;
+import edu.ut.its.models.dtos.requests.StreetCreateRequest;
+import edu.ut.its.models.dtos.responses.StreetDetailResponse;
 import edu.ut.its.models.entitys.Street;
 import edu.ut.its.repositories.StreetRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,27 +20,36 @@ public class StreetService implements IStreetService {
     private StreetRepo streetRepo;
 
     @Autowired
-    private Mapper mapper;
+    private StreetMapper streetMapper;
 
     @Override
-    public List<StreetDTO> getAllStreets() {
-        return mapper.convertToDtoList(streetRepo.findAll(), StreetDTO.class);
+    public List<StreetDetailResponse> getAllStreets() {
+        List<StreetDetailResponse> streetListDTO = streetRepo.findAll()
+                .stream()
+                .map(streetMapper::toStreetDTO)
+                .toList();
+        if (streetListDTO.isEmpty()) {
+            throw new DataNotFoundException("No streets found");
+        }
+        return streetListDTO;
     }
 
     @Override
-    public Optional<StreetDTO> getStreetById(String id) {
-        return streetRepo.findById(id)
-                .map(st -> mapper.convertToDto(st, StreetDTO.class));
+    public StreetDetailResponse getStreetById(String id) {
+        Street street = streetRepo.findById(id).orElseThrow(() -> new DataNotFoundException("Street not found"));
+        return streetMapper.toStreetDTO(street);
     }
 
     @Override
-    public StreetDTO createStreet(StreetDTO streetDTO) {
-        Street street = mapper.convertToEntity(streetDTO, Street.class);
-        return mapper.convertToDto(streetRepo.save(street), StreetDTO.class);
+    public StreetDetailResponse createStreet(StreetCreateRequest streetDTO) {
+        if(streetRepo.findByName(streetDTO.getName())) throw new DataNotFoundException("Street name already exists");
+        Street street = streetMapper.toStreet(streetDTO);
+        return streetMapper.toStreetDTO(streetRepo.save(street));
     }
 
+
     @Override
-    public StreetDTO updateStreet(String id, StreetDTO streetDTO) {
+    public StreetDetailResponse updateStreet(String id, StreetDetailResponse streetDTO) {
         Street existing = streetRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Street not found"));
 
@@ -44,6 +58,6 @@ public class StreetService implements IStreetService {
         existing.setSpeedLimit(streetDTO.getSpeedLimit());
         existing.setCameraCount(streetDTO.getCameraCount());
 
-        return mapper.convertToDto(streetRepo.save(existing), StreetDTO.class);
+        return streetMapper.toStreetDTO(streetRepo.save(existing));
     }
 }

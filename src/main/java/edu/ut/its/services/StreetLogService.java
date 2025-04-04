@@ -1,5 +1,7 @@
 package edu.ut.its.services;
 
+import edu.ut.its.exceptions.DataNotFoundException;
+import edu.ut.its.mapper.StreetLogMapper;
 import edu.ut.its.models.dtos.StreetLogDTO;
 import edu.ut.its.models.entitys.Street;
 import edu.ut.its.models.entitys.StreetLog;
@@ -25,16 +27,24 @@ public class StreetLogService implements IStreetLogService {
     private StreetRepo streetRepo;
 
     @Autowired
-    private Mapper mapper;
+    private StreetLogMapper streetLogMapper;
 
     @Override
     public List<StreetLogDTO> getAllStreetLogs() {
-        return mapper.convertToDtoList(streetLogRepo.findAll(), StreetLogDTO.class);
+        List<StreetLogDTO> streetLogs = streetLogRepo.findAll()
+                .stream()
+                .map(streetLogMapper::toStreetLogDTO)
+                .toList();
+        if (streetLogs.isEmpty()) {
+            throw new DataNotFoundException("No streets found");
+        }
+        return streetLogs;
     }
 
     @Override
-    public Optional<StreetLogDTO> getStreetLogById(String id) {
-        return streetLogRepo.findById(id).map(log -> mapper.convertToDto(log, StreetLogDTO.class));
+    public StreetLogDTO getStreetLogById(String id) {
+        StreetLog streetLog = streetLogRepo.findById(id).orElseThrow(() -> new DataNotFoundException("Street Log Not Found"));
+        return streetLogMapper.toStreetLogDTO(streetLog);
     }
 
     @Override
@@ -53,7 +63,7 @@ public class StreetLogService implements IStreetLogService {
         streetLog.setDensity(streetLogDTO.getDensity());
         streetLog.setViolationCount(streetLogDTO.getViolationCount());
 
-        return mapper.convertToDto(streetLogRepo.save(streetLog), StreetLogDTO.class);
+        return streetLogMapper.toStreetLogDTO(streetLogRepo.save(streetLog));
     }
 
     @Override
@@ -73,7 +83,7 @@ public class StreetLogService implements IStreetLogService {
         existing.setDensity(streetLogDTO.getDensity());
         existing.setViolationCount(streetLogDTO.getViolationCount());
 
-        return mapper.convertToDto(streetLogRepo.save(existing), StreetLogDTO.class);
+        return streetLogMapper.toStreetLogDTO(streetLogRepo.save(existing));
     }
 
     @Override

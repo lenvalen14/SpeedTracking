@@ -18,10 +18,10 @@ public class StreetLog {
     private String streetLogId;
 
     @DBRef
-    private Street street;   // Tham chiếu đến Street
+    private Street street;
 
     @DBRef
-    private Vehicle vehicle; // Tham chiếu đến Vehicle (nếu cần)
+    private Vehicle vehicle;
 
     private float speedAverage;
     private int density;

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface IStreetLogService {
     List<StreetLogDTO> getAllStreetLogs();
-    Optional<StreetLogDTO> getStreetLogById(String id);
+    StreetLogDTO getStreetLogById(String id);
     StreetLogDTO createStreetLog(StreetLogDTO streetLogDTO);
     StreetLogDTO updateStreetLog(String id, StreetLogDTO streetLogDTO);
     void deleteStreetLog(String id);

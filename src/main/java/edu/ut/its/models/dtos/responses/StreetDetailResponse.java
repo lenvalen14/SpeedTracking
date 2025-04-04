@@ -7,8 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CameraDetailResponse {
-    private String cameraId;
-    private StreetDetailResponse street;
-    private boolean status;
+public class StreetDetailResponse {
+    private String streetId;
+    private String name;
+    private String area;
+    private int speedLimit;
+    private int cameraCount;
 }
