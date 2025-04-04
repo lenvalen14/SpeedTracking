@@ -14,7 +14,7 @@ public class Camera {
     private String cameraId;
 
     @DBRef
-    private Street street;  // Tham chiếu đến Street
+    private Street street;
 
     private boolean status;
 }

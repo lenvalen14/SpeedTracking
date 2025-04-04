@@ -9,10 +9,10 @@ import edu.ut.its.models.entitys.Vehicle;
 import edu.ut.its.repositories.StreetLogRepo;
 import edu.ut.its.repositories.StreetRepo;
 import edu.ut.its.repositories.VehicleRepo;
+import edu.ut.its.services.impl.IStreetLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class StreetLogService implements IStreetLogService {

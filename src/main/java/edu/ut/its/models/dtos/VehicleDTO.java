@@ -17,4 +17,3 @@ public class VehicleDTO {
     private boolean priority;
     private LocalDateTime createAt;
 }
-

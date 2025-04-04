@@ -1,9 +1,12 @@
 package edu.ut.its.services;
 
+import edu.ut.its.mapper.AccountMapper;
+import edu.ut.its.mapper.ViolationMapper;
 import edu.ut.its.models.dtos.responses.AccountDetailResponse;
 import edu.ut.its.models.emuns.AccountRole;
 import edu.ut.its.models.entitys.Account;
 import edu.ut.its.repositories.AccountRepo;
+import edu.ut.its.services.impl.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,14 +21,17 @@ public class AccountService implements IAccountService {
     private AccountRepo accountRepo;
 
     @Autowired
-    private Mapper mapper;
+    private AccountMapper accountMapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
     public List<AccountDetailResponse> getAllAccounts() {
-        return mapper.convertToDtoList(accountRepo.findAllByStatusTrue(), AccountDetailResponse.class);
+        return accountRepo.findAll()
+                .stream()
+                .map(accountMapper::toAccountDTO)
+                .toList();
     }
 
     @Override

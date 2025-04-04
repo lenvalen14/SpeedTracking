@@ -11,8 +11,8 @@ import org.mapstruct.factory.Mappers;
 public interface StreetMapper {
     StreetMapper INSTANCE = Mappers.getMapper(StreetMapper.class);
 
-    @Mapping(target = "streetName")
     StreetDetailResponse toStreetDTO(Street street);
 
+    @Mapping(target = "streetId", ignore = true)
     Street toStreet(StreetCreateRequest request);
 }

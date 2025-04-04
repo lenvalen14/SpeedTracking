@@ -6,12 +6,11 @@ import edu.ut.its.models.dtos.requests.StreetCreateRequest;
 import edu.ut.its.models.dtos.responses.StreetDetailResponse;
 import edu.ut.its.models.entitys.Street;
 import edu.ut.its.repositories.StreetRepo;
+import edu.ut.its.services.impl.IStreetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class StreetService implements IStreetService {

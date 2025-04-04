@@ -1,5 +1,6 @@
 package edu.ut.its.services;
 
+import edu.ut.its.mapper.ViolationMapper;
 import edu.ut.its.models.dtos.ViolationDTO;
 import edu.ut.its.models.entitys.Street;
 import edu.ut.its.models.entitys.Vehicle;
@@ -7,6 +8,7 @@ import edu.ut.its.models.entitys.Violation;
 import edu.ut.its.repositories.StreetRepo;
 import edu.ut.its.repositories.VehicleRepo;
 import edu.ut.its.repositories.ViolationRepo;
+import edu.ut.its.services.impl.IViolationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +29,7 @@ public class ViolationService implements IViolationService {
     private StreetRepo streetRepo;
 
     @Autowired
-    private Mapper mapper;
+    private ViolationMapper violationMapper;
 
     @Override
     public List<ViolationDTO> getAllViolations() {
