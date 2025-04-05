@@ -8,9 +8,9 @@ import edu.ut.its.models.entitys.Street;
 import edu.ut.its.repositories.StreetRepo;
 import edu.ut.its.services.impl.IStreetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class StreetService implements IStreetService {
@@ -22,15 +22,16 @@ public class StreetService implements IStreetService {
     private StreetMapper streetMapper;
 
     @Override
-    public List<StreetDetailResponse> getAllStreets() {
-        List<StreetDetailResponse> streetListDTO = streetRepo.findAll()
-                .stream()
-                .map(streetMapper::toStreetDTO)
-                .toList();
-        if (streetListDTO.isEmpty()) {
-            throw new DataNotFoundException("No streets found");
+    public Page<StreetDetailResponse> getAllStreets(Pageable pageable) {
+        Page<Street> streets = streetRepo.findAll(pageable);
+
+        if (streets.isEmpty()) {
+            throw new DataNotFoundException("Street not found");
         }
-        return streetListDTO;
+
+        Page<StreetDetailResponse> responses = streets.map(streetMapper::toStreetDTO);
+
+        return responses;
     }
 
     @Override

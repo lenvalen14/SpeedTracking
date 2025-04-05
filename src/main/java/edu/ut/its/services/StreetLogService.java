@@ -3,6 +3,7 @@ package edu.ut.its.services;
 import edu.ut.its.exceptions.DataNotFoundException;
 import edu.ut.its.mapper.StreetLogMapper;
 import edu.ut.its.models.dtos.StreetLogDTO;
+import edu.ut.its.models.entitys.Account;
 import edu.ut.its.models.entitys.Street;
 import edu.ut.its.models.entitys.StreetLog;
 import edu.ut.its.models.entitys.Vehicle;
@@ -11,6 +12,8 @@ import edu.ut.its.repositories.StreetRepo;
 import edu.ut.its.repositories.VehicleRepo;
 import edu.ut.its.services.impl.IStreetLogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -30,15 +33,16 @@ public class StreetLogService implements IStreetLogService {
     private StreetLogMapper streetLogMapper;
 
     @Override
-    public List<StreetLogDTO> getAllStreetLogs() {
-        List<StreetLogDTO> streetLogs = streetLogRepo.findAll()
-                .stream()
-                .map(streetLogMapper::toStreetLogDTO)
-                .toList();
+    public Page<StreetLogDTO> getAllStreetLogs(Pageable pageable) {
+        Page<StreetLog> streetLogs = streetLogRepo.findAll(pageable);
+
         if (streetLogs.isEmpty()) {
-            throw new DataNotFoundException("No streets found");
+            throw new DataNotFoundException("Street Log Not Found");
         }
-        return streetLogs;
+
+        Page<StreetLogDTO> response = streetLogs.map(streetLogMapper::toStreetLogDTO);
+
+        return response;
     }
 
     @Override
@@ -85,10 +89,4 @@ public class StreetLogService implements IStreetLogService {
 
         return streetLogMapper.toStreetLogDTO(streetLogRepo.save(existing));
     }
-
-    @Override
-    public void deleteStreetLog(String id) {
-        throw new UnsupportedOperationException("StreetLog cannot be deleted.");
-    }
-
 }
