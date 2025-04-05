@@ -2,7 +2,7 @@ package edu.ut.its.controllers;
 
 import edu.ut.its.models.dtos.requests.StreetCreateRequest;
 import edu.ut.its.models.dtos.responses.StreetDetailResponse;
-import edu.ut.its.responese.ResponseWrapper;
+import edu.ut.its.response.ResponseWrapper;
 import edu.ut.its.services.StreetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

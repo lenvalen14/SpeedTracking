@@ -3,7 +3,7 @@ package edu.ut.its.controllers;
 import edu.ut.its.models.dtos.requests.CameraCreateRequest;
 import edu.ut.its.models.dtos.requests.CameraUpdateRequest;
 import edu.ut.its.models.dtos.responses.CameraDetailResponse;
-import edu.ut.its.responese.ResponseWrapper;
+import edu.ut.its.response.ResponseWrapper;
 import edu.ut.its.services.CameraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -1,4 +1,4 @@
-package edu.ut.its.responese;
+package edu.ut.its.response;
 
 import lombok.Getter;
 import lombok.Setter;
