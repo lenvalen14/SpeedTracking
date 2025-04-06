@@ -1,6 +1,8 @@
 package edu.ut.its.services;
 
+import edu.ut.its.exceptions.AppException;
 import edu.ut.its.exceptions.DataNotFoundException;
+import edu.ut.its.exceptions.ErrorCode;
 import edu.ut.its.mappers.VehicleMapper;
 import edu.ut.its.models.dtos.VehicleDTO;
 import edu.ut.its.models.entities.Vehicle;
@@ -28,9 +30,7 @@ public class VehicleService implements IVehicleService {
             throw new DataNotFoundException("No vehicle found");
         }
 
-        Page<VehicleDTO> response = vehicles.map(vehicleMapper::toVehicleDTO);
-
-        return response;
+        return vehicles.map(vehicleMapper::toVehicleDTO);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class VehicleService implements IVehicleService {
     @Override
     public VehicleDTO updateVehicle(String id, VehicleDTO vehicleDTO) {
         Vehicle existing = vehicleRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Vehicle not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.VEHICLE_NOT_FOUND));
 
         existing.setLicensePlates(vehicleDTO.getLicensePlates());
         existing.setType(vehicleDTO.getType());

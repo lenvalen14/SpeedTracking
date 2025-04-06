@@ -1,6 +1,8 @@
 package edu.ut.its.services;
 
+import edu.ut.its.exceptions.AppException;
 import edu.ut.its.exceptions.DataNotFoundException;
+import edu.ut.its.exceptions.ErrorCode;
 import edu.ut.its.mappers.StreetMapper;
 import edu.ut.its.models.dtos.requests.StreetCreateRequest;
 import edu.ut.its.models.dtos.responses.StreetDetailResponse;
@@ -29,9 +31,7 @@ public class StreetService implements IStreetService {
             throw new DataNotFoundException("Street not found");
         }
 
-        Page<StreetDetailResponse> responses = streets.map(streetMapper::toStreetDTO);
-
-        return responses;
+        return streets.map(streetMapper::toStreetDTO);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class StreetService implements IStreetService {
 
     @Override
     public StreetDetailResponse createStreet(StreetCreateRequest streetDTO) {
-        if(streetRepo.findByName(streetDTO.getName())) throw new DataNotFoundException("Street name already exists");
+        if(streetRepo.findByName(streetDTO.getName())) throw new AppException(ErrorCode.STREET_NAME_ALREADY_EXISTS);
         Street street = streetMapper.toStreet(streetDTO);
         return streetMapper.toStreetDTO(streetRepo.save(street));
     }
@@ -51,7 +51,7 @@ public class StreetService implements IStreetService {
     @Override
     public StreetDetailResponse updateStreet(String id, StreetDetailResponse streetDTO) {
         Street existing = streetRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Street not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.STREET_NOT_FOUND));
 
         existing.setName(streetDTO.getName());
         existing.setArea(streetDTO.getArea());

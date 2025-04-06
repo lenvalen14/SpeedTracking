@@ -1,6 +1,8 @@
 package edu.ut.its.services;
 
+import edu.ut.its.exceptions.AppException;
 import edu.ut.its.exceptions.DataNotFoundException;
+import edu.ut.its.exceptions.ErrorCode;
 import edu.ut.its.mappers.StreetLogMapper;
 import edu.ut.its.models.dtos.StreetLogDTO;
 import edu.ut.its.models.entities.Street;
@@ -38,9 +40,7 @@ public class StreetLogService implements IStreetLogService {
             throw new DataNotFoundException("Street Log Not Found");
         }
 
-        Page<StreetLogDTO> response = streetLogs.map(streetLogMapper::toStreetLogDTO);
-
-        return response;
+        return streetLogs.map(streetLogMapper::toStreetLogDTO);
     }
 
     @Override
@@ -53,10 +53,10 @@ public class StreetLogService implements IStreetLogService {
     public StreetLogDTO createStreetLog(StreetLogDTO streetLogDTO) {
 
         Street street = streetRepo.findById(streetLogDTO.getStreet().getStreetId())
-                .orElseThrow(() -> new RuntimeException("Street not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.STREET_LOG_NOT_FOUND));
 
         Vehicle vehicle = vehicleRepo.findById(streetLogDTO.getVehicle().getVehicleId())
-                .orElseThrow(() -> new RuntimeException("Vehicle not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.VEHICLE_NOT_FOUND));
 
         StreetLog streetLog = new StreetLog();
         streetLog.setStreet(street);
@@ -71,13 +71,13 @@ public class StreetLogService implements IStreetLogService {
     @Override
     public StreetLogDTO updateStreetLog(String id, StreetLogDTO streetLogDTO) {
         StreetLog existing = streetLogRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("StreetLog not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.STREET_LOG_NOT_FOUND));
 
         Street street = streetRepo.findById(streetLogDTO.getStreet().getStreetId())
-                .orElseThrow(() -> new RuntimeException("Street not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.STREET_NOT_FOUND));
 
         Vehicle vehicle = vehicleRepo.findById(streetLogDTO.getVehicle().getVehicleId())
-                .orElseThrow(() -> new RuntimeException("Vehicle not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.VEHICLE_NOT_FOUND));
 
         existing.setStreet(street);
         existing.setVehicle(vehicle);

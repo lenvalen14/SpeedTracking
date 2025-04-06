@@ -1,6 +1,8 @@
 package edu.ut.its.services;
 
+import edu.ut.its.exceptions.AppException;
 import edu.ut.its.exceptions.DataNotFoundException;
+import edu.ut.its.exceptions.ErrorCode;
 import edu.ut.its.mappers.ViolationMapper;
 import edu.ut.its.models.dtos.ViolationDTO;
 import edu.ut.its.models.entities.Street;
@@ -41,9 +43,7 @@ public class ViolationService implements IViolationService {
             throw new DataNotFoundException("List of violations is empty");
         }
 
-        Page<ViolationDTO> response = violation.map(violationMapper::toViolationDTO);
-
-        return response;
+        return violation.map(violationMapper::toViolationDTO);
     }
 
     @Override
@@ -57,10 +57,10 @@ public class ViolationService implements IViolationService {
     public ViolationDTO createViolation(ViolationDTO violationDTO) {
 
         Vehicle vehicle = vehicleRepo.findById(violationDTO.getVehicle().getVehicleId())
-                .orElseThrow(() -> new RuntimeException("Vehicle not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.VEHICLE_NOT_FOUND));
 
         Street street = streetRepo.findById(violationDTO.getStreet().getStreetId())
-                .orElseThrow(() -> new RuntimeException("Street not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.STREET_NOT_FOUND));
 
         Violation violation = new Violation();
 
@@ -78,13 +78,13 @@ public class ViolationService implements IViolationService {
     public ViolationDTO updateViolation(String id, ViolationDTO violationDTO) {
 
         Violation existingViolation = violationRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Violation not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.VIOLATION_NOT_FOUND));
 
         Vehicle vehicle = vehicleRepo.findById(violationDTO.getVehicle().getVehicleId())
-                .orElseThrow(() -> new RuntimeException("Vehicle not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.VEHICLE_NOT_FOUND));
 
         Street street = streetRepo.findById(violationDTO.getStreet().getStreetId())
-                .orElseThrow(() -> new RuntimeException("Street not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.STREET_NOT_FOUND));
 
         existingViolation.setVehicle(vehicle);
         existingViolation.setStreet(street);

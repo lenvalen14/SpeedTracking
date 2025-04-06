@@ -36,9 +36,7 @@ public class CameraService implements ICameraService {
             throw new DataNotFoundException("No cameras found");
         }
 
-        Page<CameraDetailResponse> responses = cameras.map(cameraMapper::toCameraDTO);
-
-        return responses;
+        return cameras.map(cameraMapper::toCameraDTO);
     }
 
     @Override
