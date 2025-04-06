@@ -1,15 +1,15 @@
 package edu.ut.its.services.impl;
 
+import edu.ut.its.models.dtos.requests.AccountRegisterRequest;
 import edu.ut.its.models.dtos.requests.AccountUpdateRequest;
 import edu.ut.its.models.dtos.responses.AccountDetailResponse;
-
-import java.util.List;
-import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface IAccountService {
-    List<AccountDetailResponse> getAllAccounts();
+    Page<AccountDetailResponse> getAllAccounts(Pageable pageable);
     AccountDetailResponse getAccountById(String id);
-    AccountDetailResponse createAccount(AccountDetailResponse accountDTO);
+    AccountDetailResponse createAccount(AccountRegisterRequest accountDTO);
     AccountDetailResponse updateAccount(String id, AccountUpdateRequest accountDTO);
-    void deleteAccount(String id);
+    Boolean deleteAccount(String id);
 }

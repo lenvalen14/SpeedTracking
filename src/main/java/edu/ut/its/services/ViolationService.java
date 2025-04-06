@@ -11,10 +11,11 @@ import edu.ut.its.repositories.VehicleRepo;
 import edu.ut.its.repositories.ViolationRepo;
 import edu.ut.its.services.impl.IViolationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class ViolationService implements IViolationService {
@@ -32,17 +33,17 @@ public class ViolationService implements IViolationService {
     private ViolationMapper violationMapper;
 
     @Override
-    public List<ViolationDTO> getAllViolations() {
-        List<ViolationDTO> violationDTOS = violationRepo.findAll()
-                .stream()
-                .map(violationMapper::toViolationDTO)
-                .toList();
+    public Page<ViolationDTO> getAllViolations(Pageable pageable) {
 
-        if (violationDTOS.isEmpty()) {
+        Page<Violation> violation = violationRepo.findAll(pageable);
+
+        if (violation.isEmpty()) {
             throw new DataNotFoundException("List of violations is empty");
         }
 
-        return violationDTOS;
+        Page<ViolationDTO> response = violation.map(violationMapper::toViolationDTO);
+
+        return response;
     }
 
     @Override

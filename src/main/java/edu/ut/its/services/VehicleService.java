@@ -7,8 +7,9 @@ import edu.ut.its.models.entities.Vehicle;
 import edu.ut.its.repositories.VehicleRepo;
 import edu.ut.its.services.impl.IVehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 public class VehicleService implements IVehicleService {
@@ -20,15 +21,16 @@ public class VehicleService implements IVehicleService {
     private VehicleMapper vehicleMapper;
 
     @Override
-    public List<VehicleDTO> getAllVehicles() {
-        List<VehicleDTO> vehiclesDTO = vehicleRepo.findAll()
-                .stream()
-                .map(vehicleMapper::toVehicleDTO)
-                .toList();
-        if (vehiclesDTO.isEmpty()) {
+    public Page<VehicleDTO> getAllVehicles(Pageable pageable) {
+        Page<Vehicle> vehicles = vehicleRepo.findAll(pageable);
+
+        if (vehicles.isEmpty()) {
             throw new DataNotFoundException("No vehicle found");
         }
-        return vehiclesDTO;
+
+        Page<VehicleDTO> response = vehicles.map(vehicleMapper::toVehicleDTO);
+
+        return response;
     }
 
     @Override

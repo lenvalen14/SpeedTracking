@@ -2,6 +2,7 @@ package edu.ut.its.services;
 
 import edu.ut.its.exceptions.DataNotFoundException;
 import edu.ut.its.mappers.CameraMapper;
+import edu.ut.its.models.dtos.requests.CameraCreateRequest;
 import edu.ut.its.models.dtos.requests.CameraUpdateRequest;
 import edu.ut.its.models.dtos.responses.CameraDetailResponse;
 import edu.ut.its.models.entities.Camera;
@@ -10,9 +11,9 @@ import edu.ut.its.repositories.CameraRepo;
 import edu.ut.its.repositories.StreetRepo;
 import edu.ut.its.services.impl.ICameraService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class CameraService implements ICameraService {
@@ -28,11 +29,16 @@ public class CameraService implements ICameraService {
 
 
     @Override
-    public List<CameraDetailResponse> getAllCameras() {
-        return cameraRepo.findAll()
-                .stream()
-                .map(cameraMapper::toCameraDTO)
-                .toList();
+    public Page<CameraDetailResponse> getAllCameras(Pageable pageable) {
+        Page<Camera> cameras = cameraRepo.findAll(pageable);
+
+        if (cameras.isEmpty()) {
+            throw new DataNotFoundException("No cameras found");
+        }
+
+        Page<CameraDetailResponse> responses = cameras.map(cameraMapper::toCameraDTO);
+
+        return responses;
     }
 
     @Override
@@ -43,7 +49,7 @@ public class CameraService implements ICameraService {
     }
 
     @Override
-    public CameraDetailResponse createCamera(CameraDetailResponse cameraDTO) {
+    public CameraDetailResponse createCamera(CameraCreateRequest cameraDTO) {
         Street street = streetRepo.findById(cameraDTO.getStreet().getStreetId())
                 .orElseThrow(() -> new DataNotFoundException("Street not found with ID: " + cameraDTO.getStreet().getStreetId()));
 
@@ -72,7 +78,7 @@ public class CameraService implements ICameraService {
     }
 
     @Override
-    public void deleteCamera(String id) {
+    public Boolean deleteCamera(String id) {
         Camera camera = cameraRepo.findByCameraIdAndStatusTrue(id)
                 .orElseThrow(() -> new DataNotFoundException("Camera with ID " + id + " not found"));
 
@@ -80,6 +86,8 @@ public class CameraService implements ICameraService {
         cameraRepo.save(camera);
 
         updateStreetCameraCount(camera.getStreet());
+
+        return true;
     }
 
     private void updateStreetCameraCount(Street street) {
