@@ -1,7 +1,7 @@
 package edu.ut.its.models.dtos;
 
 import edu.ut.its.models.dtos.responses.StreetDetailResponse;
-import edu.ut.its.models.emuns.ViolationLevel;
+import edu.ut.its.models.enums.ViolationLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

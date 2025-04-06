@@ -1,11 +1,11 @@
 package edu.ut.its.services;
 
 import edu.ut.its.exceptions.DataNotFoundException;
-import edu.ut.its.mapper.ViolationMapper;
+import edu.ut.its.mappers.ViolationMapper;
 import edu.ut.its.models.dtos.ViolationDTO;
-import edu.ut.its.models.entitys.Street;
-import edu.ut.its.models.entitys.Vehicle;
-import edu.ut.its.models.entitys.Violation;
+import edu.ut.its.models.entities.Street;
+import edu.ut.its.models.entities.Vehicle;
+import edu.ut.its.models.entities.Violation;
 import edu.ut.its.repositories.StreetRepo;
 import edu.ut.its.repositories.VehicleRepo;
 import edu.ut.its.repositories.ViolationRepo;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ViolationService implements IViolationService {

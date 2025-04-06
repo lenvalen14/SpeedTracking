@@ -1,10 +1,10 @@
 package edu.ut.its.services;
 
 import edu.ut.its.exceptions.DataNotFoundException;
-import edu.ut.its.mapper.StreetMapper;
+import edu.ut.its.mappers.StreetMapper;
 import edu.ut.its.models.dtos.requests.StreetCreateRequest;
 import edu.ut.its.models.dtos.responses.StreetDetailResponse;
-import edu.ut.its.models.entitys.Street;
+import edu.ut.its.models.entities.Street;
 import edu.ut.its.repositories.StreetRepo;
 import edu.ut.its.services.impl.IStreetService;
 import org.springframework.beans.factory.annotation.Autowired;

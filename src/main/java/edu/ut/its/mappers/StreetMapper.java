@@ -1,8 +1,8 @@
-package edu.ut.its.mapper;
+package edu.ut.its.mappers;
 
 import edu.ut.its.models.dtos.requests.StreetCreateRequest;
 import edu.ut.its.models.dtos.responses.StreetDetailResponse;
-import edu.ut.its.models.entitys.Street;
+import edu.ut.its.models.entities.Street;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

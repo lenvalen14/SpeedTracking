@@ -1,6 +1,6 @@
 package edu.ut.its.repositories;
 
-import edu.ut.its.models.entitys.Street;
+import edu.ut.its.models.entities.Street;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

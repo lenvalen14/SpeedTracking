@@ -1,11 +1,11 @@
 package edu.ut.its.services;
 
 import edu.ut.its.exceptions.DataNotFoundException;
-import edu.ut.its.mapper.StreetLogMapper;
+import edu.ut.its.mappers.StreetLogMapper;
 import edu.ut.its.models.dtos.StreetLogDTO;
-import edu.ut.its.models.entitys.Street;
-import edu.ut.its.models.entitys.StreetLog;
-import edu.ut.its.models.entitys.Vehicle;
+import edu.ut.its.models.entities.Street;
+import edu.ut.its.models.entities.StreetLog;
+import edu.ut.its.models.entities.Vehicle;
 import edu.ut.its.repositories.StreetLogRepo;
 import edu.ut.its.repositories.StreetRepo;
 import edu.ut.its.repositories.VehicleRepo;

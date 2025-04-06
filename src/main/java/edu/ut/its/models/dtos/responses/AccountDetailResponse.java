@@ -1,6 +1,6 @@
 package edu.ut.its.models.dtos.responses;
 
-import edu.ut.its.models.emuns.AccountRole;
+import edu.ut.its.models.enums.AccountRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

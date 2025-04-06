@@ -1,15 +1,14 @@
 package edu.ut.its.services;
 
 import edu.ut.its.exceptions.DataNotFoundException;
-import edu.ut.its.mapper.VehicleMapper;
+import edu.ut.its.mappers.VehicleMapper;
 import edu.ut.its.models.dtos.VehicleDTO;
-import edu.ut.its.models.entitys.Vehicle;
+import edu.ut.its.models.entities.Vehicle;
 import edu.ut.its.repositories.VehicleRepo;
 import edu.ut.its.services.impl.IVehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class VehicleService implements IVehicleService {

@@ -1,13 +1,11 @@
 package edu.ut.its.models.dtos.requests;
 
-import edu.ut.its.models.emuns.AccountRole;
+import edu.ut.its.models.enums.AccountRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor

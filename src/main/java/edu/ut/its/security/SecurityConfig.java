@@ -1,4 +1,4 @@
-package edu.ut.its.secutity;
+package edu.ut.its.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -1,7 +1,7 @@
-package edu.ut.its.mapper;
+package edu.ut.its.mappers;
 
 import edu.ut.its.models.dtos.StreetLogDTO;
-import edu.ut.its.models.entitys.StreetLog;
+import edu.ut.its.models.entities.StreetLog;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

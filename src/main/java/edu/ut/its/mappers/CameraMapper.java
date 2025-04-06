@@ -1,9 +1,9 @@
-package edu.ut.its.mapper;
+package edu.ut.its.mappers;
 
 import edu.ut.its.models.dtos.requests.CameraCreateRequest;
 import edu.ut.its.models.dtos.requests.CameraUpdateRequest;
 import edu.ut.its.models.dtos.responses.CameraDetailResponse;
-import edu.ut.its.models.entitys.Camera;
+import edu.ut.its.models.entities.Camera;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;

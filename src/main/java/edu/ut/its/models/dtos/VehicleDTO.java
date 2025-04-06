@@ -1,6 +1,6 @@
 package edu.ut.its.models.dtos;
 
-import edu.ut.its.models.emuns.VehicleType;
+import edu.ut.its.models.enums.VehicleType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

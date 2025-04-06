@@ -1,4 +1,4 @@
-package edu.ut.its.models.emuns;
+package edu.ut.its.models.enums;
 
 public enum VehicleType {
     CAR,

@@ -1,6 +1,6 @@
 package edu.ut.its.repositories;
 
-import edu.ut.its.models.entitys.Violation;
+import edu.ut.its.models.entities.Violation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

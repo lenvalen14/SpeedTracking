@@ -1,6 +1,6 @@
-package edu.ut.its.models.entitys;
+package edu.ut.its.models.entities;
 
-import edu.ut.its.models.emuns.VehicleType;
+import edu.ut.its.models.enums.VehicleType;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

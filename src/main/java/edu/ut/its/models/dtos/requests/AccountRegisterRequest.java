@@ -1,6 +1,6 @@
 package edu.ut.its.models.dtos.requests;
 
-import edu.ut.its.models.emuns.AccountRole;
+import edu.ut.its.models.enums.AccountRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

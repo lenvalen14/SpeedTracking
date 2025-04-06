@@ -1,8 +1,7 @@
-package edu.ut.its.mapper;
+package edu.ut.its.mappers;
 
 import edu.ut.its.models.dtos.VehicleDTO;
-import edu.ut.its.models.dtos.requests.CameraCreateRequest;
-import edu.ut.its.models.entitys.Vehicle;
+import edu.ut.its.models.entities.Vehicle;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

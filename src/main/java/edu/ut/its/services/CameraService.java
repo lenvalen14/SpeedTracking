@@ -1,11 +1,11 @@
 package edu.ut.its.services;
 
 import edu.ut.its.exceptions.DataNotFoundException;
-import edu.ut.its.mapper.CameraMapper;
+import edu.ut.its.mappers.CameraMapper;
 import edu.ut.its.models.dtos.requests.CameraUpdateRequest;
 import edu.ut.its.models.dtos.responses.CameraDetailResponse;
-import edu.ut.its.models.entitys.Camera;
-import edu.ut.its.models.entitys.Street;
+import edu.ut.its.models.entities.Camera;
+import edu.ut.its.models.entities.Street;
 import edu.ut.its.repositories.CameraRepo;
 import edu.ut.its.repositories.StreetRepo;
 import edu.ut.its.services.impl.ICameraService;

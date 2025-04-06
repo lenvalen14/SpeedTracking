@@ -1,11 +1,10 @@
 package edu.ut.its.services;
 
-import edu.ut.its.mapper.AccountMapper;
-import edu.ut.its.mapper.ViolationMapper;
+import edu.ut.its.mappers.AccountMapper;
 import edu.ut.its.models.dtos.requests.AccountUpdateRequest;
 import edu.ut.its.models.dtos.responses.AccountDetailResponse;
-import edu.ut.its.models.emuns.AccountRole;
-import edu.ut.its.models.entitys.Account;
+import edu.ut.its.models.enums.AccountRole;
+import edu.ut.its.models.entities.Account;
 import edu.ut.its.repositories.AccountRepo;
 import edu.ut.its.services.impl.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AccountService implements IAccountService {
