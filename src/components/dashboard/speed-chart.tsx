@@ -23,9 +23,9 @@ export default function SpeedcChart() {
             </select>
       </div>
         {/* chart toggle */}
-      {/* <div className="flex-1">
+      <div className="flex-1">
         <LineChart dataType={selectedType} timeRange={timeRange} />
-      </div> */}
+      </div>
 
     </div>
   );

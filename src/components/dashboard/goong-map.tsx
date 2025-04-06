@@ -1,8 +1,14 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { Card } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
+
+// Extend the Window interface to include goongjs
+declare global {
+  interface Window {
+    goongjs: any
+  }
+}
 
 interface Location {
   id: string
@@ -54,22 +60,29 @@ export default function GoongMap({ selectedLocation }: GoongMapProps) {
         }
 
         // Set the API access token before initializing the map
-        // @ts-ignore - Goong Maps is loaded via script
         window.goongjs.accessToken = apiKey
 
         // Default center on Ho Chi Minh City
         const defaultCenter = [106.7, 10.8]
 
-        // Initialize the map
-        // @ts-ignore - Goong Maps is loaded via script
-        const goongMap = new window.goongjs.Map({
-          container: mapRef.current,
-          style: "https://tiles.goong.io/assets/goong_map_web.json",
-          center: defaultCenter,
-          zoom: 12,
-        })
+        // Initialize the map with a delay to ensure container is properly sized
+        setTimeout(() => {
+          if (mapRef.current) {
+            const goongMap = new window.goongjs.Map({
+              container: mapRef.current,
+              style: "https://tiles.goong.io/assets/goong_map_web.json",
+              center: defaultCenter,
+              zoom: 12,
+            })
 
-        setMap(goongMap)
+            // Force resize after map is loaded to fix rendering issues
+            goongMap.on("load", () => {
+              goongMap.resize()
+            })
+
+            setMap(goongMap)
+          }
+        }, 100)
       } catch (error) {
         console.error("Error initializing Goong Maps:", error)
       }
@@ -90,7 +103,6 @@ export default function GoongMap({ selectedLocation }: GoongMapProps) {
 
       try {
         // Create a popup with location information
-        // @ts-ignore - Goong Maps is loaded via script
         const newPopup = new window.goongjs.Popup({ offset: 25 }).setHTML(`
             <div>
               <h3 style="font-weight: bold; margin-bottom: 4px;">${selectedLocation.name}</h3>
@@ -101,7 +113,6 @@ export default function GoongMap({ selectedLocation }: GoongMapProps) {
         setPopup(newPopup)
 
         // Create a new marker at the selected location
-        // @ts-ignore - Goong Maps is loaded via script
         const newMarker = new window.goongjs.Marker()
           .setLngLat([selectedLocation.lng, selectedLocation.lat])
           .setPopup(newPopup)
@@ -115,21 +126,46 @@ export default function GoongMap({ selectedLocation }: GoongMapProps) {
           zoom: 15,
           essential: true,
         })
+
+        // Force resize to ensure map renders correctly
+        map.resize()
       } catch (error) {
         console.error("Error updating marker:", error)
       }
     }
   }, [map, selectedLocation])
 
+  // Handle resize events to ensure map renders correctly
+  useEffect(() => {
+    const handleResize = () => {
+      if (map) {
+        map.resize()
+      }
+    }
+
+    window.addEventListener("resize", handleResize)
+
+    // Force resize on component mount
+    if (map) {
+      setTimeout(() => {
+        map.resize()
+      }, 200)
+    }
+
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [map])
+
   return (
-    <Card className="w-full h-full relative overflow-hidden">
+    <div className="w-full h-full relative">
       {!mapLoaded && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
           <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
         </div>
       )}
-      <div ref={mapRef} className="w-full h-full" />
-    </Card>
+      <div ref={mapRef} className="w-full h-full" style={{ minHeight: "100%" }} />
+    </div>
   )
 }
 
