@@ -56,7 +56,7 @@ const LineChart: React.FC<Props> = ({ dataType, timeRange }) => {
     },
   };
 
-  return <div style={{ width: '90%', height: '250px' }}>
+  return <div style={{ width: '100%', height: '250px' }}>
         <Line data={data} options={{ ...options, maintainAspectRatio: false }} />
         </div>;
 };
