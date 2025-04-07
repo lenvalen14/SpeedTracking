@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react"
 import { Bell, Grid, FileText, Shield, PenTool, User, Settings, Search } from "lucide-react"
 import Header from "./header"
-import SpeedcChart from "./speed-chart"
+import SpeedChart from "./speed-chart"
 import LocationSearch from "./location-search"
+import TrafficCards from "./traffic-card"
+import TrafficMetrics from "./traffic-metrics"
 // import SpeedChart from "@/components/speed-chart"
 // import CameraCard from "@/components/camera-card"
 // import MetricCard from "@/components/metric-card"
@@ -28,16 +30,23 @@ export default function Dashboard() {
     <>
     {/* dash-board */}
           <div className="h-screen"> 
-              <div className="flex-1  overflow-auto bg-red-100 h-full">
-                  <div className="grid grid-flow-col grid-rows-8 bg-yellow-100 h-full">
-                      <div className="col-span-2 row-span-1 bg-yellow-200">
+              <div className="flex-1  overflow-auto h-full">
+                  <div className="grid grid-flow-col grid-rows-8  h-full">
+                      <div className="col-span-2 row-span-1 ">
                       <Header />
                       </div>
-                      <div className="col-span-2 row-span-5 bg-green-200">
-                        <SpeedcChart/>
+                      <div className="col-span-2 row-span-5  flex">
+                      <div className="flex-3">
+                        <SpeedChart />
                       </div>
-                      <div className="col-span-2 row-span-2 bg-blue-200">c</div>
-                      <div className="col-span-2 row-span-8 bg-pink-200">
+                      <div className="flex-1">
+                        <TrafficCards />
+                      </div>
+                    </div>
+                      <div className="col-span-2 row-span-2 ">
+                        <TrafficMetrics/>
+                      </div>
+                      <div className="col-span-2 row-span-8 ">
                         <LocationSearch/>
                       </div>
                   </div>

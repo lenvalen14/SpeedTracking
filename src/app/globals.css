@@ -47,6 +47,7 @@
     /* Các màu mới từ ảnh */
     --its-blue: #1C46F5;        /* Màu xanh dương */
     --its-yellow: #D2FF52;      /* Màu vàng nhạt */
+   --its-yellow-bold: #415212;      /*  Màu vàng dam */
     --its-light-gray: #F7F7F7;  /* Màu xám sáng */
     --its-green: #15B173;       /* Màu xanh lá */
     --radius: 0.625rem;

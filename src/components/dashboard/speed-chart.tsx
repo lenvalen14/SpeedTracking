@@ -79,10 +79,10 @@ export default function SpeedChart() {
       {/* Chart container */}
       <div className="flex-1 min-h-0">
         <LineChart dataType={selectedType} timeRange={timeRange} />
-      </div>
-
       {/* Chart toggle buttons */}
       <ChartToggle selectedType={selectedType} onChangeType={setSelectedType} />
+      </div>
+
     </div>
   )
 }
