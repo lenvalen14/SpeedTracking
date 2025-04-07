@@ -41,7 +41,7 @@ public class VehicleService implements IVehicleService {
 
     @Override
     public VehicleDTO createVehicle(VehicleDTO vehicleDTO) {
-        Vehicle vehicle = vehicleRepo.existsVehicleByLicensePlates(vehicleDTO.getLicensePlates());
+        Vehicle vehicle = vehicleRepo.findByLicensePlates(vehicleDTO.getLicensePlates());
         if (vehicle == null) {
             Vehicle newVehicle = vehicleRepo.save(vehicleMapper.toVehicle(vehicleDTO));
             return vehicleMapper.toVehicleDTO(newVehicle);

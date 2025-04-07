@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StreetRepo extends MongoRepository<Street, String> {
-    public Boolean findByName(String name);
+    Street findByName(String name);
 }

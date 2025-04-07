@@ -42,10 +42,13 @@ public class StreetService implements IStreetService {
 
     @Override
     public StreetDetailResponse createStreet(StreetCreateRequest streetDTO) {
-        if(streetRepo.findByName(streetDTO.getName())) throw new AppException(ErrorCode.STREET_NAME_ALREADY_EXISTS);
+        if (streetRepo.findByName(streetDTO.getName()) != null) {
+            throw new AppException(ErrorCode.STREET_NAME_ALREADY_EXISTS);
+        }
         Street street = streetMapper.toStreet(streetDTO);
         return streetMapper.toStreetDTO(streetRepo.save(street));
     }
+
 
 
     @Override
