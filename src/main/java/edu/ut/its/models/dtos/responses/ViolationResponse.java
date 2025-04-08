@@ -1,6 +1,6 @@
-package edu.ut.its.models.dtos;
+package edu.ut.its.models.dtos.responses;
 
-import edu.ut.its.models.dtos.responses.StreetDetailResponse;
+import edu.ut.its.models.dtos.VehicleDTO;
 import edu.ut.its.models.enums.ViolationLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ViolationDTO {
+public class ViolationResponse {
     private String violationId;
     private VehicleDTO vehicle;
     private StreetDetailResponse street;

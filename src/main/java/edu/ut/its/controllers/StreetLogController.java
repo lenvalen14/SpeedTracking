@@ -1,6 +1,7 @@
 package edu.ut.its.controllers;
 
-import edu.ut.its.models.dtos.StreetLogDTO;
+import edu.ut.its.models.dtos.requests.StreetLogRequest;
+import edu.ut.its.models.dtos.responses.StreetLogResponse;
 import edu.ut.its.response.ResponseWrapper;
 import edu.ut.its.services.StreetLogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +20,14 @@ public class StreetLogController {
     private StreetLogService streetLogService;
 
     @GetMapping()
-    public ResponseEntity<ResponseWrapper<Page<StreetLogDTO>>> getAllStreetLog(
+    public ResponseEntity<ResponseWrapper<Page<StreetLogResponse>>> getAllStreetLog(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
     {
         Pageable pageable = PageRequest.of(page, size);
-        Page<StreetLogDTO> responses = streetLogService.getAllStreetLogs(pageable);
+        Page<StreetLogResponse> responses = streetLogService.getAllStreetLogs(pageable);
 
-        ResponseWrapper<Page<StreetLogDTO>> responseWrapper;
+        ResponseWrapper<Page<StreetLogResponse>> responseWrapper;
 
         if(responses != null && !responses.isEmpty())
         {
@@ -41,12 +42,12 @@ public class StreetLogController {
     }
 
     @GetMapping("/{requestID}")
-    public ResponseEntity<ResponseWrapper<StreetLogDTO>> getStreetLog(
+    public ResponseEntity<ResponseWrapper<StreetLogResponse>> getStreetLog(
             @PathVariable String requestID)
     {
-        StreetLogDTO responses = streetLogService.getStreetLogById(requestID);
+        StreetLogResponse responses = streetLogService.getStreetLogById(requestID);
 
-        ResponseWrapper<StreetLogDTO> responseWrapper;
+        ResponseWrapper<StreetLogResponse> responseWrapper;
 
         if(responses != null)
         {
@@ -61,19 +62,19 @@ public class StreetLogController {
     }
 
     @PostMapping()
-    public ResponseEntity<ResponseWrapper<StreetLogDTO>> createStreetLog(
-            @RequestBody StreetLogDTO streetLogDTO)
+    public ResponseEntity<ResponseWrapper<StreetLogResponse>> createStreetLog(
+            @RequestBody StreetLogRequest streetLogDTO)
     {
         try {
-            StreetLogDTO responses = streetLogService.createStreetLog(streetLogDTO);
+            StreetLogResponse responses = streetLogService.createStreetLog(streetLogDTO);
 
-            ResponseWrapper<StreetLogDTO> responseWrapper =
+            ResponseWrapper<StreetLogResponse> responseWrapper =
                     new ResponseWrapper<>("Create StreetLog Successfully", responses);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(responseWrapper);
         }
         catch (Exception e) {
-            ResponseWrapper<StreetLogDTO> responseWrapper =
+            ResponseWrapper<StreetLogResponse> responseWrapper =
                     new ResponseWrapper<>(e.getMessage(), null);
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseWrapper);
@@ -81,20 +82,20 @@ public class StreetLogController {
     }
 
     @PutMapping("/{requestID}")
-    public ResponseEntity<ResponseWrapper<StreetLogDTO>> updateStreetLog(
-            @RequestBody StreetLogDTO streetLogDTO,
+    public ResponseEntity<ResponseWrapper<StreetLogResponse>> updateStreetLog(
+            @RequestBody StreetLogResponse streetLogDTO,
             @PathVariable String requestID)
     {
         try {
-            StreetLogDTO responses = streetLogService.updateStreetLog(requestID, streetLogDTO);
+            StreetLogResponse responses = streetLogService.updateStreetLog(requestID, streetLogDTO);
 
-            ResponseWrapper<StreetLogDTO> responseWrapper =
+            ResponseWrapper<StreetLogResponse> responseWrapper =
                     new ResponseWrapper<>("Update StreetLog Successfully", responses);
 
             return ResponseEntity.status(HttpStatus.OK).body(responseWrapper);
         }
         catch (Exception e) {
-            ResponseWrapper<StreetLogDTO> responseWrapper =
+            ResponseWrapper<StreetLogResponse> responseWrapper =
                     new ResponseWrapper<>(e.getMessage(), null);
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseWrapper);

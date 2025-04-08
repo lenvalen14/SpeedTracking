@@ -4,7 +4,8 @@ import edu.ut.its.exceptions.AppException;
 import edu.ut.its.exceptions.DataNotFoundException;
 import edu.ut.its.exceptions.ErrorCode;
 import edu.ut.its.mappers.ViolationMapper;
-import edu.ut.its.models.dtos.ViolationDTO;
+import edu.ut.its.models.dtos.requests.ViolationRequest;
+import edu.ut.its.models.dtos.responses.ViolationResponse;
 import edu.ut.its.models.entities.Street;
 import edu.ut.its.models.entities.Vehicle;
 import edu.ut.its.models.entities.Violation;
@@ -35,7 +36,7 @@ public class ViolationService implements IViolationService {
     private ViolationMapper violationMapper;
 
     @Override
-    public Page<ViolationDTO> getAllViolations(Pageable pageable) {
+    public Page<ViolationResponse> getAllViolations(Pageable pageable) {
 
         Page<Violation> violation = violationRepo.findAll(pageable);
 
@@ -47,19 +48,19 @@ public class ViolationService implements IViolationService {
     }
 
     @Override
-    public ViolationDTO getViolationById(String id) {
+    public ViolationResponse getViolationById(String id) {
         Violation violation = violationRepo.findById(id).orElseThrow(() -> new DataNotFoundException("Violation not found"));
 
         return violationMapper.toViolationDTO(violation);
     }
 
     @Override
-    public ViolationDTO createViolation(ViolationDTO violationDTO) {
+    public ViolationResponse createViolation(ViolationRequest violationDTO) {
 
-        Vehicle vehicle = vehicleRepo.findById(violationDTO.getVehicle().getVehicleId())
+        Vehicle vehicle = vehicleRepo.findById(violationDTO.getVehicleId())
                 .orElseThrow(() -> new AppException(ErrorCode.VEHICLE_NOT_FOUND));
 
-        Street street = streetRepo.findById(violationDTO.getStreet().getStreetId())
+        Street street = streetRepo.findById(violationDTO.getStreetId())
                 .orElseThrow(() -> new AppException(ErrorCode.STREET_NOT_FOUND));
 
         Violation violation = new Violation();
@@ -75,7 +76,7 @@ public class ViolationService implements IViolationService {
     }
 
     @Override
-    public ViolationDTO updateViolation(String id, ViolationDTO violationDTO) {
+    public ViolationResponse updateViolation(String id, ViolationResponse violationDTO) {
 
         Violation existingViolation = violationRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.VIOLATION_NOT_FOUND));

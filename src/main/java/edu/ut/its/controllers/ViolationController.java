@@ -1,6 +1,7 @@
 package edu.ut.its.controllers;
 
-import edu.ut.its.models.dtos.ViolationDTO;
+import edu.ut.its.models.dtos.requests.ViolationRequest;
+import edu.ut.its.models.dtos.responses.ViolationResponse;
 import edu.ut.its.response.ResponseWrapper;
 import edu.ut.its.services.ViolationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,21 +20,21 @@ public class ViolationController {
     ViolationService violationService;
 
     @GetMapping()
-    public ResponseEntity<ResponseWrapper<Page<ViolationDTO>>> getAllViolation(
+    public ResponseEntity<ResponseWrapper<Page<ViolationResponse>>> getAllViolation(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
     {
         Pageable pageable = PageRequest.of(page, size);
-        Page<ViolationDTO> violationDTOS = violationService.getAllViolations(pageable);
+        Page<ViolationResponse> violationDTOS = violationService.getAllViolations(pageable);
 
         if (violationDTOS != null && !violationDTOS.isEmpty()) {
-            ResponseWrapper<Page<ViolationDTO>> responseWrapper =
+            ResponseWrapper<Page<ViolationResponse>> responseWrapper =
                     new ResponseWrapper<>("Data Violations Successfully", violationDTOS);
 
             return ResponseEntity.status(HttpStatus.OK).body(responseWrapper);
         }
         else {
-            ResponseWrapper<Page<ViolationDTO>> responseWrapper =
+            ResponseWrapper<Page<ViolationResponse>> responseWrapper =
                     new ResponseWrapper<>("List Data Of Violations Is Empty", null);
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseWrapper);
@@ -41,19 +42,19 @@ public class ViolationController {
     }
 
     @GetMapping("/{requestID}")
-    public ResponseEntity<ResponseWrapper<ViolationDTO>> getViolation(
+    public ResponseEntity<ResponseWrapper<ViolationResponse>> getViolation(
             @PathVariable String requestID)
     {
-        ViolationDTO violationDTO = violationService.getViolationById(requestID);
+        ViolationResponse violationDTO = violationService.getViolationById(requestID);
 
         if (violationDTO != null) {
-            ResponseWrapper<ViolationDTO> responseWrapper =
+            ResponseWrapper<ViolationResponse> responseWrapper =
                     new ResponseWrapper<>("Data Violations Successfully", violationDTO);
 
             return ResponseEntity.status(HttpStatus.OK).body(responseWrapper);
         }
         else {
-            ResponseWrapper<ViolationDTO> responseWrapper =
+            ResponseWrapper<ViolationResponse> responseWrapper =
                     new ResponseWrapper<>("Data Of Violations Not Found", null);
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseWrapper);
@@ -61,19 +62,19 @@ public class ViolationController {
     }
 
     @PostMapping()
-    public ResponseEntity<ResponseWrapper<ViolationDTO>> createViolation(
-            @RequestBody ViolationDTO violationDTO)
+    public ResponseEntity<ResponseWrapper<ViolationResponse>> createViolation(
+            @RequestBody ViolationRequest violationDTO)
     {
         try {
-            ViolationDTO respDTO = violationService.createViolation(violationDTO);
+            ViolationResponse respDTO = violationService.createViolation(violationDTO);
 
-            ResponseWrapper<ViolationDTO> responseWrapper =
+            ResponseWrapper<ViolationResponse> responseWrapper =
                     new ResponseWrapper<>("Create Violations Successfully", respDTO);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(responseWrapper);
         }
         catch (Exception e) {
-            ResponseWrapper<ViolationDTO> responseWrapper =
+            ResponseWrapper<ViolationResponse> responseWrapper =
                     new ResponseWrapper<>(e.getMessage(), null);
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseWrapper);
@@ -81,20 +82,20 @@ public class ViolationController {
     }
 
     @PutMapping("/{requestID}")
-    public ResponseEntity<ResponseWrapper<ViolationDTO>> updateViolation(
-            @RequestBody ViolationDTO violationDTO,
+    public ResponseEntity<ResponseWrapper<ViolationResponse>> updateViolation(
+            @RequestBody ViolationResponse violationDTO,
             @PathVariable String requestID)
     {
         try {
-            ViolationDTO responseDTO = violationService.updateViolation(requestID, violationDTO);
+            ViolationResponse responseDTO = violationService.updateViolation(requestID, violationDTO);
 
-            ResponseWrapper<ViolationDTO> responseWrapper =
+            ResponseWrapper<ViolationResponse> responseWrapper =
                     new ResponseWrapper<>("Update Violations Successfully", responseDTO);
 
             return ResponseEntity.status(HttpStatus.OK).body(responseWrapper);
         }
         catch (Exception e) {
-            ResponseWrapper<ViolationDTO> responseWrapper =
+            ResponseWrapper<ViolationResponse> responseWrapper =
                     new ResponseWrapper<>(e.getMessage(), null);
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseWrapper);

@@ -1,13 +1,15 @@
 package edu.ut.its.services.impl;
 
-import edu.ut.its.models.dtos.ViolationDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import edu.ut.its.models.dtos.requests.ViolationRequest;
+import edu.ut.its.models.dtos.responses.ViolationResponse;
+
 
 public interface IViolationService {
-    Page<ViolationDTO> getAllViolations(Pageable pageable);
-    ViolationDTO getViolationById(String id);
-    ViolationDTO createViolation(ViolationDTO violationDTO);
-    ViolationDTO updateViolation(String id, ViolationDTO violationDTO);
+    Page<ViolationResponse> getAllViolations(Pageable pageable);
+    ViolationResponse getViolationById(String id);
+    ViolationResponse createViolation(ViolationRequest violationDTO);
+    ViolationResponse updateViolation(String id, ViolationResponse violationDTO);
 }

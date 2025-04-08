@@ -1,13 +1,15 @@
 package edu.ut.its.services.impl;
 
-import edu.ut.its.models.dtos.StreetLogDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import edu.ut.its.models.dtos.requests.StreetLogRequest;
+import edu.ut.its.models.dtos.responses.StreetLogResponse;
+
 public interface IStreetLogService {
-    Page<StreetLogDTO> getAllStreetLogs(Pageable pageable);
-    StreetLogDTO getStreetLogById(String id);
-    StreetLogDTO createStreetLog(StreetLogDTO streetLogDTO);
-    StreetLogDTO updateStreetLog(String id, StreetLogDTO streetLogDTO);
+    Page<StreetLogResponse> getAllStreetLogs(Pageable pageable);
+    StreetLogResponse getStreetLogById(String id);
+    StreetLogResponse createStreetLog(StreetLogRequest streetLogDTO);
+    StreetLogResponse updateStreetLog(String id, StreetLogResponse streetLogDTO);
 }
 
