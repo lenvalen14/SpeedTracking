@@ -48,8 +48,8 @@ public class CameraService implements ICameraService {
 
     @Override
     public CameraDetailResponse createCamera(CameraCreateRequest cameraDTO) {
-        Street street = streetRepo.findById(cameraDTO.getStreet().getStreetId())
-                .orElseThrow(() -> new DataNotFoundException("Street not found with ID: " + cameraDTO.getStreet().getStreetId()));
+        Street street = streetRepo.findById(cameraDTO.getStreetId())
+                .orElseThrow(() -> new DataNotFoundException("Street not found with ID: " + cameraDTO.getStreetId()));
 
         Camera camera = new Camera();
         camera.setStreet(street);

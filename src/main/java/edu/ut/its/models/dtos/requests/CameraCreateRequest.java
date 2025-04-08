@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CameraCreateRequest {
-    private StreetDetailResponse street;
+    private String streetId;
 
     @Builder.Default
     private boolean status = true;
