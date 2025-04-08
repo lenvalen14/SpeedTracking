@@ -33,5 +33,6 @@ public class AccountRegisterRequest {
     @Builder.Default
     private boolean status = true;
 
-    private LocalDateTime createAt;
+    @Builder.Default
+    private LocalDateTime createAt = LocalDateTime.now();
 }
