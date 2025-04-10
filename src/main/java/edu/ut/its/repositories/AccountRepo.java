@@ -12,4 +12,5 @@ public interface AccountRepo extends MongoRepository<Account, String> {
     boolean existsByEmail(String email);
     Optional<Account> findByAccountIdAndStatusTrue(String id);
     List<Account> findAllByStatusTrue();
+    Account findByEmail(String email);
 }

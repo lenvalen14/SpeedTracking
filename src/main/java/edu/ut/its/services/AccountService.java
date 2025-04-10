@@ -11,26 +11,20 @@ import edu.ut.its.models.enums.AccountRole;
 import edu.ut.its.models.entities.Account;
 import edu.ut.its.repositories.AccountRepo;
 import edu.ut.its.services.impl.IAccountService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.beans.Transient;
-
 @Service
+@AllArgsConstructor
 public class AccountService implements IAccountService {
 
-    @Autowired
-    private AccountRepo accountRepo;
-
-    @Autowired
-    private AccountMapper accountMapper;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final AccountRepo accountRepo;
+    private final AccountMapper accountMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Page<AccountDetailResponse> getAllAccounts(Pageable pageable) {

@@ -10,22 +10,18 @@ import edu.ut.its.models.entities.Street;
 import edu.ut.its.repositories.CameraRepo;
 import edu.ut.its.repositories.StreetRepo;
 import edu.ut.its.services.impl.ICameraService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class CameraService implements ICameraService {
 
-    @Autowired
-    private CameraRepo cameraRepo;
-
-    @Autowired
-    private StreetRepo streetRepo;
-
-    @Autowired
-    private CameraMapper cameraMapper;
+    private final CameraRepo cameraRepo;
+    private final StreetRepo streetRepo;
+    private final CameraMapper cameraMapper;
 
 
     @Override

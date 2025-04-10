@@ -13,7 +13,7 @@ import edu.ut.its.repositories.StreetRepo;
 import edu.ut.its.repositories.VehicleRepo;
 import edu.ut.its.repositories.ViolationRepo;
 import edu.ut.its.services.impl.IViolationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,19 +21,13 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @Service
+@AllArgsConstructor
 public class ViolationService implements IViolationService {
 
-    @Autowired
-    private ViolationRepo violationRepo;
-
-    @Autowired
-    private VehicleRepo vehicleRepo;
-
-    @Autowired
-    private StreetRepo streetRepo;
-
-    @Autowired
-    private ViolationMapper violationMapper;
+    private final ViolationRepo violationRepo;
+    private final VehicleRepo vehicleRepo;
+    private final StreetRepo streetRepo;
+    private final ViolationMapper violationMapper;
 
     @Override
     public Page<ViolationResponse> getAllViolations(Pageable pageable) {

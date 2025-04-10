@@ -13,25 +13,19 @@ import edu.ut.its.repositories.StreetLogRepo;
 import edu.ut.its.repositories.StreetRepo;
 import edu.ut.its.repositories.VehicleRepo;
 import edu.ut.its.services.impl.IStreetLogService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class StreetLogService implements IStreetLogService {
 
-    @Autowired
-    private StreetLogRepo streetLogRepo;
-
-    @Autowired
-    private VehicleRepo vehicleRepo;
-
-    @Autowired
-    private StreetRepo streetRepo;
-
-    @Autowired
-    private StreetLogMapper streetLogMapper;
+    private final StreetLogRepo streetLogRepo;
+    private final VehicleRepo vehicleRepo;
+    private final StreetRepo streetRepo;
+    private final StreetLogMapper streetLogMapper;
 
     @Override
     public Page<StreetLogResponse> getAllStreetLogs(Pageable pageable) {

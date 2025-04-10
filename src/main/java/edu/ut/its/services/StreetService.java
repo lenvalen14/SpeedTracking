@@ -9,19 +9,17 @@ import edu.ut.its.models.dtos.responses.StreetDetailResponse;
 import edu.ut.its.models.entities.Street;
 import edu.ut.its.repositories.StreetRepo;
 import edu.ut.its.services.impl.IStreetService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class StreetService implements IStreetService {
 
-    @Autowired
-    private StreetRepo streetRepo;
-
-    @Autowired
-    private StreetMapper streetMapper;
+    private final StreetRepo streetRepo;
+    private final StreetMapper streetMapper;
 
     @Override
     public Page<StreetDetailResponse> getAllStreets(Pageable pageable) {

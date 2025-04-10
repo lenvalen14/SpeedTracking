@@ -8,19 +8,17 @@ import edu.ut.its.models.dtos.VehicleDTO;
 import edu.ut.its.models.entities.Vehicle;
 import edu.ut.its.repositories.VehicleRepo;
 import edu.ut.its.services.impl.IVehicleService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class VehicleService implements IVehicleService {
 
-    @Autowired
-    private VehicleRepo vehicleRepo;
-
-    @Autowired
-    private VehicleMapper vehicleMapper;
+    private final VehicleRepo vehicleRepo;
+    private final VehicleMapper vehicleMapper;
 
     @Override
     public Page<VehicleDTO> getAllVehicles(Pageable pageable) {

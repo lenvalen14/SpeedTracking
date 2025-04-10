@@ -10,7 +10,9 @@ import java.util.Optional;
 
 @Repository
 public interface CameraRepo extends MongoRepository<Camera, String> {
-    List<Camera> findAllByStatusTrue(); // Lấy danh sách camera chưa bị xóa mềm
-    Optional<Camera> findByCameraIdAndStatusTrue(String id); // Tìm camera chưa bị xóa mềm theo ID
-    long countByStreetAndStatusTrue(Street street); // Đếm số lượng camera chưa bị xóa mềm trong 1 đường
+    List<Camera> findAllByStatusTrue();
+    Optional<Camera> findByCameraIdAndStatusTrue(String id);
+    long countByStreetAndStatusTrue(Street street);
+    long countByStreet_StreetIdAndStatusTrue(String streetId);
+    List<Camera> findByStreet_StreetIdAndStatusTrue(String streetId);
 }
