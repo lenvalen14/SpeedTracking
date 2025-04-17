@@ -6,6 +6,7 @@ import edu.ut.its.models.dtos.requests.CameraUpdateRequest;
 import edu.ut.its.models.dtos.responses.CameraDetailResponse;
 import edu.ut.its.response.ResponseWrapper;
 import edu.ut.its.services.CameraService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -90,7 +91,7 @@ public class CameraController {
 
     @PutMapping("/{requestID}")
     public ResponseEntity<ResponseWrapper<CameraDetailResponse>> updateCamera(
-            @RequestBody CameraUpdateRequest cameraUpdateRequest,
+            @Valid  @RequestBody CameraUpdateRequest cameraUpdateRequest,
             @PathVariable String requestID)
     {
         try {

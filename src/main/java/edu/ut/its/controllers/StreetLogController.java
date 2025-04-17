@@ -4,6 +4,7 @@ import edu.ut.its.models.dtos.requests.StreetLogRequest;
 import edu.ut.its.models.dtos.responses.StreetLogResponse;
 import edu.ut.its.response.ResponseWrapper;
 import edu.ut.its.services.StreetLogService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -63,7 +64,7 @@ public class StreetLogController {
 
     @PostMapping()
     public ResponseEntity<ResponseWrapper<StreetLogResponse>> createStreetLog(
-            @RequestBody StreetLogRequest streetLogDTO)
+            @Valid  @RequestBody StreetLogRequest streetLogDTO)
     {
         try {
             StreetLogResponse responses = streetLogService.createStreetLog(streetLogDTO);
@@ -83,7 +84,7 @@ public class StreetLogController {
 
     @PutMapping("/{requestID}")
     public ResponseEntity<ResponseWrapper<StreetLogResponse>> updateStreetLog(
-            @RequestBody StreetLogResponse streetLogDTO,
+            @Valid @RequestBody StreetLogResponse streetLogDTO,
             @PathVariable String requestID)
     {
         try {

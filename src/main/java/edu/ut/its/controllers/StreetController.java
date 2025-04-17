@@ -4,6 +4,7 @@ import edu.ut.its.models.dtos.requests.StreetCreateRequest;
 import edu.ut.its.models.dtos.responses.StreetDetailResponse;
 import edu.ut.its.response.ResponseWrapper;
 import edu.ut.its.services.StreetService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -63,7 +64,7 @@ public class StreetController {
 
     @PostMapping()
     public ResponseEntity<ResponseWrapper<StreetDetailResponse>> createStreet(
-            @RequestBody StreetCreateRequest streetCreateRequest)
+            @Valid  @RequestBody StreetCreateRequest streetCreateRequest)
     {
         try {
             StreetDetailResponse streetDetailResponse = streetService.createStreet(streetCreateRequest);
@@ -83,7 +84,7 @@ public class StreetController {
 
     @PutMapping("/{requestID}")
     public ResponseEntity<ResponseWrapper<StreetDetailResponse>> updateStreet(
-            @RequestBody StreetDetailResponse streetDetailResponse,
+            @Valid @RequestBody StreetDetailResponse streetDetailResponse,
             @PathVariable String requestID)
     {
         try {

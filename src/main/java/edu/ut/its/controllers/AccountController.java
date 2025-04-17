@@ -105,7 +105,7 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseWrapper<?>> login(@RequestBody AccountLoginRequest accountLoginRequest) {
+    public ResponseEntity<ResponseWrapper<?>> login(@Valid @RequestBody AccountLoginRequest accountLoginRequest) {
         try {
             String token = accountService.login(accountLoginRequest);
 
@@ -149,7 +149,7 @@ public class AccountController {
 
     @PutMapping("/{requestID}")
     public ResponseEntity<ResponseWrapper<AccountDetailResponse>> updateAccount(
-            @RequestBody AccountUpdateRequest accountUpdateRequest,
+            @Valid @RequestBody AccountUpdateRequest accountUpdateRequest,
             @PathVariable String requestID    )
     {
         try {
