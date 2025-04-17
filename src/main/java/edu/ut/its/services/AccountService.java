@@ -22,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @AllArgsConstructor
 public class AccountService implements IAccountService {
@@ -34,7 +36,7 @@ public class AccountService implements IAccountService {
 
     @Override
     public Page<AccountDetailResponse> getAllAccounts(Pageable pageable) {
-        Page<Account> accounts = accountRepo.findAll(pageable);
+        Page<Account> accounts = accountRepo.findAllByStatusTrue(pageable);
 
         if (accounts.isEmpty()) {
             throw new DataNotFoundException("No Account Found!");
@@ -65,6 +67,7 @@ public class AccountService implements IAccountService {
 
         account.setRole(AccountRole.USER);
         account.setStatus(true);
+        account.setCreateAt(LocalDateTime.now());
 
         return accountMapper.toAccountDTO(accountRepo.save(account));
     }

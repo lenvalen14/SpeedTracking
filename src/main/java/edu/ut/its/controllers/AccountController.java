@@ -12,6 +12,7 @@ import edu.ut.its.models.enums.AccountRole;
 import edu.ut.its.response.ResponseWrapper;
 import edu.ut.its.services.AccountService;
 import edu.ut.its.services.TokenService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -86,7 +87,7 @@ public class AccountController {
 
     @PostMapping("/register")
     public ResponseEntity<ResponseWrapper<AccountDetailResponse>> createAccount(
-            @RequestBody AccountRegisterRequest accountRegisterRequest)
+            @Valid @RequestBody AccountRegisterRequest accountRegisterRequest)
     {
         try {
             AccountDetailResponse account = accountService.createAccount(accountRegisterRequest);
