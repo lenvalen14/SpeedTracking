@@ -31,7 +31,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private boolean isBypassToken(@NonNull HttpServletRequest request) {
         final List<Pair<String, String>> bypassTokens = Arrays.asList(
-                Pair.of("/account/generate-secret-key", "GET")
+                Pair.of("/account/generate-secret-key", "GET"),
+                Pair.of("/swagger-ui/index.html", "GET"),
+                Pair.of("/v3/api-docs", "GET"),
+                Pair.of("/v3/api-docs/**", "GET"),
+                Pair.of("/v3/api-docs/swagger-config", "GET"),
+                Pair.of("/swagger-ui/**", "GET"),
+                Pair.of("/swagger-ui.html", "GET")
         );
 
         String requestPath = request.getServletPath();
