@@ -122,7 +122,9 @@ public class AccountController {
             TokenDTO tokenDTO = new TokenDTO();
             tokenDTO.setToken(jwt.getToken());
             tokenDTO.setRefreshToken(jwt.getRefreshToken());
+            tokenDTO.setRefreshExpirationDate(jwt.getRefreshExpirationDate());
             tokenDTO.setExpirationDate(jwt.getExpirationDate());
+            tokenDTO.setTokenId(jwt.getTokenId());
             List<AccountRole> roles = userDetail.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .map(AccountRole::valueOf)
