@@ -1,5 +1,6 @@
 package edu.ut.its.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ut.its.models.dtos.requests.CameraCreateRequest;
 import edu.ut.its.models.dtos.requests.CameraUpdateRequest;
 import edu.ut.its.models.dtos.responses.CameraDetailResponse;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/camera")
@@ -62,25 +64,29 @@ public class CameraController {
         }
     }
 
-    @PostMapping()
+    @PostMapping("/cameras")
     public ResponseEntity<ResponseWrapper<CameraDetailResponse>> createCamera(
-            @RequestBody CameraCreateRequest cameraCreateRequest)
-    {
+            @RequestParam("camera") String cameraCreateRequestJson,
+            @RequestParam("videoFile") MultipartFile videoFile) {
+
         try {
-            CameraDetailResponse cameraDetailResponse = cameraService.createCamera(cameraCreateRequest);
+            CameraCreateRequest cameraCreateRequest = new ObjectMapper().readValue(cameraCreateRequestJson, CameraCreateRequest.class);
+
+            CameraDetailResponse cameraDetailResponse = cameraService.createCamera(cameraCreateRequest, videoFile);
 
             ResponseWrapper<CameraDetailResponse> responseWrapper =
                     new ResponseWrapper<>("Create Camera Successfully", cameraDetailResponse);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(responseWrapper);
-        }
-        catch (Exception e) {
+
+        } catch (Exception e) {
             ResponseWrapper<CameraDetailResponse> responseWrapper =
                     new ResponseWrapper<>(e.getMessage(), null);
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseWrapper);
         }
     }
+
 
     @PutMapping("/{requestID}")
     public ResponseEntity<ResponseWrapper<CameraDetailResponse>> updateCamera(

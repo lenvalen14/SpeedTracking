@@ -14,6 +14,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 @AllArgsConstructor
@@ -22,6 +25,7 @@ public class CameraService implements ICameraService {
     private final CameraRepo cameraRepo;
     private final StreetRepo streetRepo;
     private final CameraMapper cameraMapper;
+    private final FileUploadService fileUploadService;
 
 
     @Override
@@ -43,7 +47,7 @@ public class CameraService implements ICameraService {
     }
 
     @Override
-    public CameraDetailResponse createCamera(CameraCreateRequest cameraDTO) {
+    public CameraDetailResponse createCamera(CameraCreateRequest cameraDTO, MultipartFile videoFile) throws IOException {
         Street street = streetRepo.findById(cameraDTO.getStreetId())
                 .orElseThrow(() -> new DataNotFoundException("Street not found with ID: " + cameraDTO.getStreetId()));
 
@@ -51,12 +55,18 @@ public class CameraService implements ICameraService {
         camera.setStreet(street);
         camera.setStatus(true);
 
+        if (videoFile != null && !videoFile.isEmpty()) {
+            String videoUrl = fileUploadService.uploadVideo(videoFile);
+            camera.setVideoUrl(videoUrl);
+        }
+
         Camera savedCamera = cameraRepo.save(camera);
 
         updateStreetCameraCount(street);
 
         return cameraMapper.toCameraDTO(savedCamera);
     }
+
 
     @Override
     public CameraDetailResponse updateCamera(String id, CameraUpdateRequest cameraDTO) {

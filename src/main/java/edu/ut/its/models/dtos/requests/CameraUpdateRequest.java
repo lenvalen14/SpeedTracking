@@ -16,4 +16,5 @@ public class CameraUpdateRequest {
     private String cameraId;
     private StreetDetailResponse street;
     private Boolean status;
+    private String videoUrl;
 }
