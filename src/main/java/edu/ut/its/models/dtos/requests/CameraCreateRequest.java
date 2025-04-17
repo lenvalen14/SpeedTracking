@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 public class CameraCreateRequest {
     private String streetId;
 
+    private String videoUrl;
+
     @Builder.Default
     private boolean status = true;
 }

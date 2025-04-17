@@ -19,4 +19,6 @@ public class Camera {
     private Street street;
 
     private boolean status;
+
+    private String videoUrl;
 }
