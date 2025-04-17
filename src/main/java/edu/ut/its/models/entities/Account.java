@@ -31,7 +31,8 @@ public class Account {
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
-        authorityList.add(new SimpleGrantedAuthority("ROLE_"+getRole()));
+        authorityList.add(new SimpleGrantedAuthority(getRole().name()));
+
         return authorityList;
     }
 }

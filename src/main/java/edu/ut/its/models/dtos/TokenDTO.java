@@ -1,5 +1,6 @@
 package edu.ut.its.models.dtos;
 
+import edu.ut.its.models.enums.AccountRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,4 +24,6 @@ public class TokenDTO {
 
     private String accountId;
     private String email;
+
+    private AccountRole role;
 }

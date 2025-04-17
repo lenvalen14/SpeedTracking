@@ -1,18 +1,28 @@
 package edu.ut.its.controllers;
 
 import edu.ut.its.components.JwtTokenUtils;
+import edu.ut.its.models.dtos.TokenDTO;
+import edu.ut.its.models.dtos.requests.AccountLoginRequest;
 import edu.ut.its.models.dtos.requests.AccountRegisterRequest;
 import edu.ut.its.models.dtos.requests.AccountUpdateRequest;
 import edu.ut.its.models.dtos.responses.AccountDetailResponse;
+import edu.ut.its.models.entities.Account;
+import edu.ut.its.models.entities.Token;
+import edu.ut.its.models.enums.AccountRole;
 import edu.ut.its.response.ResponseWrapper;
 import edu.ut.its.services.AccountService;
+import edu.ut.its.services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -24,6 +34,9 @@ public class AccountController {
 
     @Autowired
     private JwtTokenUtils jwtTokenUtils;
+
+    @Autowired
+    private TokenService tokenService;
 
     @GetMapping("/generate-secret-key")
     public ResponseEntity<String> generateSecretKey(){
@@ -71,7 +84,7 @@ public class AccountController {
         }
     }
 
-    @PostMapping()
+    @PostMapping("/register")
     public ResponseEntity<ResponseWrapper<AccountDetailResponse>> createAccount(
             @RequestBody AccountRegisterRequest accountRegisterRequest)
     {
@@ -87,6 +100,47 @@ public class AccountController {
                     new ResponseWrapper<>(ex.getMessage(), null);
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseWrapper);
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ResponseWrapper<?>> login(@RequestBody AccountLoginRequest accountLoginRequest) {
+        try {
+            String token = accountService.login(accountLoginRequest);
+
+            if (token == null) {
+                return new ResponseEntity<>(new ResponseWrapper<>("Login failed", null), HttpStatus.UNAUTHORIZED);
+            }
+
+            Account userDetail = accountService.getUserDetailsFromToken(token);
+
+            if (userDetail == null) {
+                return new ResponseEntity<>(new ResponseWrapper<>("Login failed", null), HttpStatus.UNAUTHORIZED);
+            }
+
+            Token jwt = tokenService.addToken(userDetail, token);
+            TokenDTO tokenDTO = new TokenDTO();
+            tokenDTO.setToken(jwt.getToken());
+            tokenDTO.setRefreshToken(jwt.getRefreshToken());
+            tokenDTO.setExpirationDate(jwt.getExpirationDate());
+            List<AccountRole> roles = userDetail.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .map(AccountRole::valueOf)
+                    .toList();
+
+            tokenDTO.setRole(userDetail.getRole());
+            tokenDTO.setTokenType(jwt.getTokenType());
+            tokenDTO.setAccountId(userDetail.getAccountId());
+            tokenDTO.setEmail(userDetail.getEmail());
+
+            ResponseWrapper<TokenDTO> responseWrapper = new ResponseWrapper<>("Login successful", tokenDTO);
+            return new ResponseEntity<>(responseWrapper, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            ResponseWrapper<String> responseWrapper = new ResponseWrapper<>("An error occurred during login", e.getMessage());
+            return new ResponseEntity<>(responseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

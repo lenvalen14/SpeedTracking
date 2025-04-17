@@ -2,6 +2,7 @@ package edu.ut.its.components;
 
 import edu.ut.its.models.entities.Account;
 import edu.ut.its.models.entities.Token;
+import edu.ut.its.models.enums.AccountRole;
 import edu.ut.its.repositories.TokenRepo;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -20,6 +21,7 @@ import java.security.Key;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -50,10 +52,15 @@ public class JwtTokenUtils {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", account.getAccountId());
 
-        // Thêm danh sách quyền của người dùng vào payload
-        claims.put("roles", account.getAuthorities().stream()
+        List<String> roleNames = account.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList()));
+                .toList();
+
+        List<AccountRole> roles = roleNames.stream()
+                .map(AccountRole::valueOf)
+                .toList();
+
+        claims.put("roles", roles);
 
         try {
             return Jwts.builder()
@@ -68,6 +75,7 @@ public class JwtTokenUtils {
             throw new RuntimeException("Cannot create JWT token", e);
         }
     }
+
 
 
     public String generateSecretKey() {
@@ -105,8 +113,7 @@ public class JwtTokenUtils {
     }
 
     public String extractEmail(String token) {
-        String email = extractClaim(token, Claims::getSubject);
-        return email;
+        return extractClaim(token, Claims::getSubject);
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {
@@ -128,7 +135,6 @@ public class JwtTokenUtils {
             logger.debug("Email matches: {}", emailMatches);
             logger.debug("Not expired: {}", notExpired);
 
-            // Thêm kiểm tra chữ ký
             boolean signatureValid = validateSignature(token);
             logger.debug("Signature valid: {}", signatureValid);
 

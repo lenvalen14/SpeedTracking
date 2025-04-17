@@ -1,9 +1,11 @@
 package edu.ut.its.services;
 
+import edu.ut.its.components.JwtTokenUtils;
 import edu.ut.its.exceptions.AppException;
 import edu.ut.its.exceptions.DataNotFoundException;
 import edu.ut.its.exceptions.ErrorCode;
 import edu.ut.its.mappers.AccountMapper;
+import edu.ut.its.models.dtos.requests.AccountLoginRequest;
 import edu.ut.its.models.dtos.requests.AccountRegisterRequest;
 import edu.ut.its.models.dtos.requests.AccountUpdateRequest;
 import edu.ut.its.models.dtos.responses.AccountDetailResponse;
@@ -14,6 +16,8 @@ import edu.ut.its.services.impl.IAccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +29,8 @@ public class AccountService implements IAccountService {
     private final AccountRepo accountRepo;
     private final AccountMapper accountMapper;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenUtils jwtTokenUtils;
 
     @Override
     public Page<AccountDetailResponse> getAllAccounts(Pageable pageable) {
@@ -61,6 +67,37 @@ public class AccountService implements IAccountService {
         account.setStatus(true);
 
         return accountMapper.toAccountDTO(accountRepo.save(account));
+    }
+
+    @Override
+    public String login(AccountLoginRequest accountLoginRequest) {
+        Account existingAccount = accountRepo.findByEmail(accountLoginRequest.getEmail());
+        if (existingAccount == null) {
+            throw new AppException(ErrorCode.ACCOUNT_NOT_FOUND);
+        }
+        if (!passwordEncoder.matches(accountLoginRequest.getPassword(), existingAccount.getPassword())) {
+            throw new AppException(ErrorCode.ACCOUNT_PASSWORD_INVALID);
+        }
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                accountLoginRequest.getEmail(), accountLoginRequest.getPassword(),
+                existingAccount.getAuthorities()
+        );
+        authenticationManager.authenticate(authenticationToken);
+        return jwtTokenUtils.generateToken(existingAccount);
+    }
+
+    @Override
+    public Account getUserDetailsFromToken(String token) throws Exception {
+        if (jwtTokenUtils.isTokenExpired(token)) {
+            throw new RuntimeException("Token is expired");
+        }
+        String email = jwtTokenUtils.extractEmail(token);
+        Account account = accountRepo.findByEmail(email);
+        if (account != null) {
+            return account;
+        } else {
+            throw new AppException(ErrorCode.ACCOUNT_NOT_FOUND);
+        }
     }
 
 

@@ -41,6 +41,8 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(
                                 "/account/generate-secret-key",
+                                "/account/login",
+                                "/account/register",
                                 "/swagger-ui/index.html",
                                 "/v3/api-docs",
                                 "/v3/api-docs/**",

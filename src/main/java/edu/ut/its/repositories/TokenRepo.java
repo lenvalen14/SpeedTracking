@@ -1,6 +1,7 @@
 package edu.ut.its.repositories;
 
 
+import edu.ut.its.models.entities.Account;
 import edu.ut.its.models.entities.Token;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
