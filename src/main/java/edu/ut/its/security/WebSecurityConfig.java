@@ -40,27 +40,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(
-                                "/user-management/generate-secret-key",
-                                "/user-management/register",
-                                "/user-management/login",
-                                "/user-management/loginGoogle",
-                                "/user-management/update_password/**",
-                                "/forgot-password/send-otp",
-                                "/forgot-password/verify-otp",
-                                "/forgot-password/forgot_password/{email}",
-                                "/disaster-warning-management/{city}",
-                                "/disaster-management/disaster",
-                                "/swagger/api-docs",
-                                "/swagger/api-docs/**",
-                                "/swagger/api-docs/swagger-config",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/swagger-ui/index.html",
-                                "/disaster-management/disaster",
-                                "/disaster-management/disaster/{id}",
-                                "/disaster-info-management/disaster-info-disasterName/{disasterId}",
-                                "/ws-disaster-warning/**",
-                                "/location-management/location/create/**"
+                                "/account/generate-secret-key"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

@@ -1,5 +1,6 @@
 package edu.ut.its.controllers;
 
+import edu.ut.its.components.JwtTokenUtils;
 import edu.ut.its.models.dtos.requests.AccountRegisterRequest;
 import edu.ut.its.models.dtos.requests.AccountUpdateRequest;
 import edu.ut.its.models.dtos.responses.AccountDetailResponse;
@@ -20,6 +21,14 @@ public class AccountController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private JwtTokenUtils jwtTokenUtils;
+
+    @GetMapping("/generate-secret-key")
+    public ResponseEntity<String> generateSecretKey(){
+        return ResponseEntity.ok(jwtTokenUtils.generateSecretKey());
+    }
 
     @GetMapping()
     public ResponseEntity<ResponseWrapper<Page<AccountDetailResponse>>> getAllAccountDetail(

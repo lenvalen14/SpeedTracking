@@ -27,15 +27,6 @@ public class SecurityConfig {
     private final AccountRepo accountRepo;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()); // Mặc dịnh cho tất cả, bạn có thể chỉnh sửa
-        return http.build();
-    }
-
-    @Bean
     public UserDetailsService userDetailsService() {
         return email -> {
             Account account = accountRepo.findByEmail(email);

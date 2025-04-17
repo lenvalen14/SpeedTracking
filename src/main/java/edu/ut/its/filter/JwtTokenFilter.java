@@ -31,7 +31,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private boolean isBypassToken(@NonNull HttpServletRequest request) {
         final List<Pair<String, String>> bypassTokens = Arrays.asList(
-                Pair.of("/user-management/generate-secret-key", "GET")
+                Pair.of("/account/generate-secret-key", "GET")
         );
 
         String requestPath = request.getServletPath();
