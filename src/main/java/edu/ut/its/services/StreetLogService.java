@@ -18,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @AllArgsConstructor
 public class StreetLogService implements IStreetLogService {
@@ -59,6 +61,7 @@ public class StreetLogService implements IStreetLogService {
         streetLog.setSpeedAverage(streetLogDTO.getSpeedAverage());
         streetLog.setDensity(streetLogDTO.getDensity());
         streetLog.setViolationCount(streetLogDTO.getViolationCount());
+        streetLog.setCreateAt(LocalDateTime.now());
 
         return streetLogMapper.toStreetLogDTO(streetLogRepo.save(streetLog));
     }

@@ -105,7 +105,7 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseWrapper<?>> login(@Valid @RequestBody AccountLoginRequest accountLoginRequest) {
+    public ResponseEntity<ResponseWrapper<?>> login( @RequestBody @Valid AccountLoginRequest accountLoginRequest) {
         try {
             String token = accountService.login(accountLoginRequest);
 
