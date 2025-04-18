@@ -31,7 +31,11 @@ public enum ErrorCode {
 
     // System (1400-1499)
     ACCOUNT_AUTHENTICATION_FAILED(1400, "Authentication failed", HttpStatus.UNAUTHORIZED),
+    ACCOUNT_AUTHENTICATION_NOT_FOUND(1402, "Authentication not found", HttpStatus.UNAUTHORIZED),
     ACCOUNT_SESSION_EXPIRED(1401, "Account session expired", HttpStatus.UNAUTHORIZED),
+
+    // UploadFile(1500 - 1599)
+    FILE_UPLOAD_NOT_FOUND(1500, "File upload not found", HttpStatus.BAD_REQUEST),
 
     // ================ CAMERA ERROR CODES (2000-2999) ================
     // Not Found (2000-2099)

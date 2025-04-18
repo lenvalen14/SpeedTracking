@@ -1,6 +1,8 @@
 package edu.ut.its.services;
 
 import edu.ut.its.components.JwtTokenUtils;
+import edu.ut.its.exceptions.AppException;
+import edu.ut.its.exceptions.ErrorCode;
 import edu.ut.its.models.entities.Account;
 import edu.ut.its.models.entities.Token;
 import edu.ut.its.repositories.TokenRepo;
@@ -75,7 +77,7 @@ public class TokenService implements ITokenService {
     public void deleteToken(String token) {
         Token tokenEntity = tokenRepository.findByToken(token);
         if (tokenEntity == null) {
-            throw new RuntimeException("Token not found.");
+            throw new AppException(ErrorCode.ACCOUNT_AUTHENTICATION_NOT_FOUND);
         } else {
             tokenRepository.delete(tokenEntity);
         }
@@ -85,11 +87,11 @@ public class TokenService implements ITokenService {
     public Token refreshToken(String refreshToken, Account account) throws Exception {
         Token existingToken = tokenRepository.findByRefreshToken(refreshToken);
         if (existingToken == null) {
-            throw new Exception("Token not found");
+            throw new AppException(ErrorCode.ACCOUNT_AUTHENTICATION_NOT_FOUND);
         }
         if (existingToken.getRefreshExpirationDate().isBefore(LocalDateTime.now())) {
             tokenRepository.delete(existingToken);
-            throw new Exception("Refresh token is expired");
+            throw new AppException(ErrorCode.ACCOUNT_SESSION_EXPIRED);
         }
         String token = jwtTokenUtil.generateToken(account);
         LocalDateTime expirationDateTime = LocalDateTime.now().plusSeconds(expiration);
@@ -105,7 +107,7 @@ public class TokenService implements ITokenService {
     public Number getCountToken(String id) throws Exception {
         List<Token> tokens = tokenRepository.findByAccount_AccountId(id);
         if (tokens.isEmpty()) {
-            throw new Exception("Token not found");
+            throw new AppException(ErrorCode.ACCOUNT_AUTHENTICATION_NOT_FOUND);
         }
         int countToken = 0;
         for (Token token : tokens) {

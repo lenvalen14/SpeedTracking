@@ -39,7 +39,7 @@ public class AccountService implements IAccountService {
         Page<Account> accounts = accountRepo.findAllByStatusTrue(pageable);
 
         if (accounts.isEmpty()) {
-            throw new DataNotFoundException("No Account Found!");
+            throw new AppException(ErrorCode.ACCOUNT_NOT_FOUND);
         }
 
         return accounts.map(accountMapper::toAccountDTO);

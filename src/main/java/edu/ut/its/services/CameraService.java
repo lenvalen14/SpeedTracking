@@ -1,6 +1,8 @@
 package edu.ut.its.services;
 
+import edu.ut.its.exceptions.AppException;
 import edu.ut.its.exceptions.DataNotFoundException;
+import edu.ut.its.exceptions.ErrorCode;
 import edu.ut.its.mappers.CameraMapper;
 import edu.ut.its.models.dtos.requests.CameraCreateRequest;
 import edu.ut.its.models.dtos.requests.CameraUpdateRequest;
@@ -33,7 +35,7 @@ public class CameraService implements ICameraService {
         Page<Camera> cameras = cameraRepo.findAllByStatusTrue(pageable);
 
         if (cameras.isEmpty()) {
-            throw new DataNotFoundException("No cameras found");
+            throw new AppException(ErrorCode.CAMERA_NOT_FOUND);
         }
 
         return cameras.map(cameraMapper::toCameraDTO);
@@ -42,14 +44,14 @@ public class CameraService implements ICameraService {
     @Override
     public CameraDetailResponse getCameraById(String id) {
         Camera camera = cameraRepo.findByCameraIdAndStatusTrue(id)
-                .orElseThrow(() -> new DataNotFoundException("Camera with ID " + id + " not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.CAMERA_NOT_FOUND));
         return cameraMapper.toCameraDTO(camera);
     }
 
     @Override
     public CameraDetailResponse createCamera(CameraCreateRequest cameraDTO, MultipartFile videoFile) throws IOException {
         Street street = streetRepo.findById(cameraDTO.getStreetId())
-                .orElseThrow(() -> new DataNotFoundException("Street not found with ID: " + cameraDTO.getStreetId()));
+                .orElseThrow(() -> new AppException(ErrorCode.STREET_NOT_FOUND));
 
         Camera camera = new Camera();
         camera.setStreet(street);
@@ -71,10 +73,10 @@ public class CameraService implements ICameraService {
     @Override
     public CameraDetailResponse updateCamera(String id, CameraUpdateRequest cameraDTO) {
         Camera existingCamera = cameraRepo.findByCameraIdAndStatusTrue(id)
-                .orElseThrow(() -> new DataNotFoundException("Camera with ID " + id + " not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.CAMERA_NOT_FOUND));
 
         Street street = streetRepo.findById(cameraDTO.getStreet().getStreetId())
-                .orElseThrow(() -> new DataNotFoundException("Street with ID " + cameraDTO.getStreet().getStreetId() + " not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.STREET_NOT_FOUND));
 
         cameraMapper.updateCameraFromRequest(cameraDTO, existingCamera);
 
@@ -84,7 +86,7 @@ public class CameraService implements ICameraService {
     @Override
     public Boolean deleteCamera(String id) {
         Camera camera = cameraRepo.findByCameraIdAndStatusTrue(id)
-                .orElseThrow(() -> new DataNotFoundException("Camera with ID " + id + " not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.CAMERA_NOT_FOUND));
 
         camera.setStatus(false);
         cameraRepo.save(camera);

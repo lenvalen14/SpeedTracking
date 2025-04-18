@@ -25,7 +25,7 @@ public class VehicleService implements IVehicleService {
         Page<Vehicle> vehicles = vehicleRepo.findAll(pageable);
 
         if (vehicles.isEmpty()) {
-            throw new DataNotFoundException("No vehicle found");
+            throw new AppException(ErrorCode.VEHICLE_NOT_FOUND);
         }
 
         return vehicles.map(vehicleMapper::toVehicleDTO);
@@ -33,7 +33,7 @@ public class VehicleService implements IVehicleService {
 
     @Override
     public VehicleDTO getVehicleById(String id) {
-        Vehicle vehicle = vehicleRepo.findById(id).orElseThrow(() -> new DataNotFoundException("vehicle not found"));
+        Vehicle vehicle = vehicleRepo.findById(id).orElseThrow(() -> new AppException(ErrorCode.VEHICLE_NOT_FOUND));
         return vehicleMapper.toVehicleDTO(vehicle);
     }
 

@@ -32,7 +32,7 @@ public class StreetLogService implements IStreetLogService {
         Page<StreetLog> streetLogs = streetLogRepo.findAll(pageable);
 
         if (streetLogs.isEmpty()) {
-            throw new DataNotFoundException("Street Log Not Found");
+            throw new AppException(ErrorCode.STREET_LOG_NOT_FOUND);
         }
 
         return streetLogs.map(streetLogMapper::toStreetLogDTO);
@@ -40,7 +40,7 @@ public class StreetLogService implements IStreetLogService {
 
     @Override
     public StreetLogResponse getStreetLogById(String id) {
-        StreetLog streetLog = streetLogRepo.findById(id).orElseThrow(() -> new DataNotFoundException("Street Log Not Found"));
+        StreetLog streetLog = streetLogRepo.findById(id).orElseThrow(() -> new AppException(ErrorCode.STREET_LOG_NOT_FOUND));
         return streetLogMapper.toStreetLogDTO(streetLog);
     }
 

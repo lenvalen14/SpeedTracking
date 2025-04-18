@@ -35,7 +35,7 @@ public class ViolationService implements IViolationService {
         Page<Violation> violation = violationRepo.findAll(pageable);
 
         if (violation.isEmpty()) {
-            throw new DataNotFoundException("List of violations is empty");
+            throw new AppException(ErrorCode.VEHICLE_NOT_FOUND);
         }
 
         return violation.map(violationMapper::toViolationDTO);
@@ -43,7 +43,7 @@ public class ViolationService implements IViolationService {
 
     @Override
     public ViolationResponse getViolationById(String id) {
-        Violation violation = violationRepo.findById(id).orElseThrow(() -> new DataNotFoundException("Violation not found"));
+        Violation violation = violationRepo.findById(id).orElseThrow(() -> new AppException(ErrorCode.VEHICLE_NOT_FOUND));
 
         return violationMapper.toViolationDTO(violation);
     }
