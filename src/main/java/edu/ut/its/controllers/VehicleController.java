@@ -3,6 +3,7 @@ package edu.ut.its.controllers;
 import edu.ut.its.models.dtos.VehicleDTO;
 import edu.ut.its.response.ResponseWrapper;
 import edu.ut.its.services.VehicleService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -62,7 +63,7 @@ public class VehicleController {
 
     @PostMapping()
     public ResponseEntity<ResponseWrapper<VehicleDTO>> createVehicle(
-            @RequestBody VehicleDTO vehicleDTO)
+            @Valid  @RequestBody VehicleDTO vehicleDTO)
     {
         try {
             VehicleDTO responseDTO = vehicleService.createVehicle(vehicleDTO);
@@ -82,7 +83,7 @@ public class VehicleController {
 
     @PutMapping("/{requestID}")
     public ResponseEntity<ResponseWrapper<VehicleDTO>> updateVehicle(
-            @RequestBody VehicleDTO vehicleDTO,
+            @Valid @RequestBody VehicleDTO vehicleDTO,
             @PathVariable String requestID)
     {
         try {

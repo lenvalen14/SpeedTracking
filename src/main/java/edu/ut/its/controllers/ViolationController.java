@@ -4,6 +4,7 @@ import edu.ut.its.models.dtos.requests.ViolationRequest;
 import edu.ut.its.models.dtos.responses.ViolationResponse;
 import edu.ut.its.response.ResponseWrapper;
 import edu.ut.its.services.ViolationService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -63,7 +64,7 @@ public class ViolationController {
 
     @PostMapping()
     public ResponseEntity<ResponseWrapper<ViolationResponse>> createViolation(
-            @RequestBody ViolationRequest violationDTO)
+            @Valid  @RequestBody ViolationRequest violationDTO)
     {
         try {
             ViolationResponse respDTO = violationService.createViolation(violationDTO);
@@ -83,7 +84,7 @@ public class ViolationController {
 
     @PutMapping("/{requestID}")
     public ResponseEntity<ResponseWrapper<ViolationResponse>> updateViolation(
-            @RequestBody ViolationResponse violationDTO,
+            @Valid @RequestBody ViolationResponse violationDTO,
             @PathVariable String requestID)
     {
         try {

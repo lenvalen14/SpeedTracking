@@ -6,11 +6,13 @@ import edu.ut.its.models.dtos.requests.CameraUpdateRequest;
 import edu.ut.its.models.dtos.responses.CameraDetailResponse;
 import edu.ut.its.response.ResponseWrapper;
 import edu.ut.its.services.CameraService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +23,9 @@ public class CameraController {
 
     @Autowired
     private CameraService cameraService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @GetMapping()
     public ResponseEntity<ResponseWrapper<Page<CameraDetailResponse>>> getAllCameras(
@@ -64,13 +69,14 @@ public class CameraController {
         }
     }
 
-    @PostMapping("/cameras")
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseWrapper<CameraDetailResponse>> createCamera(
             @RequestParam("camera") String cameraCreateRequestJson,
-            @RequestParam("videoFile") MultipartFile videoFile) {
+            @RequestParam MultipartFile videoFile) {
 
         try {
-            CameraCreateRequest cameraCreateRequest = new ObjectMapper().readValue(cameraCreateRequestJson, CameraCreateRequest.class);
+            // Parse chuỗi JSON thành object
+            CameraCreateRequest cameraCreateRequest = objectMapper.readValue(cameraCreateRequestJson, CameraCreateRequest.class);
 
             CameraDetailResponse cameraDetailResponse = cameraService.createCamera(cameraCreateRequest, videoFile);
 
@@ -90,7 +96,7 @@ public class CameraController {
 
     @PutMapping("/{requestID}")
     public ResponseEntity<ResponseWrapper<CameraDetailResponse>> updateCamera(
-            @RequestBody CameraUpdateRequest cameraUpdateRequest,
+            @Valid  @RequestBody CameraUpdateRequest cameraUpdateRequest,
             @PathVariable String requestID)
     {
         try {

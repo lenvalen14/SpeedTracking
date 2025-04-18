@@ -30,7 +30,7 @@ public class CameraService implements ICameraService {
 
     @Override
     public Page<CameraDetailResponse> getAllCameras(Pageable pageable) {
-        Page<Camera> cameras = cameraRepo.findAll(pageable);
+        Page<Camera> cameras = cameraRepo.findAllByStatusTrue(pageable);
 
         if (cameras.isEmpty()) {
             throw new DataNotFoundException("No cameras found");
