@@ -54,7 +54,6 @@ public class VehicleService implements IVehicleService {
 
         existing.setLicensePlates(vehicleDTO.getLicensePlates());
         existing.setType(vehicleDTO.getType());
-        existing.setPriority(vehicleDTO.isPriority());
 
         return vehicleMapper.toVehicleDTO(vehicleRepo.save(existing));
     }

@@ -61,8 +61,7 @@ public class ViolationService implements IViolationService {
 
         violation.setVehicle(vehicle);
         violation.setStreet(street);
-        violation.setSpeedRecorded(violationDTO.getSpeedRecorded());
-        violation.setViolationLevel(violationDTO.getViolationLevel());
+        violation.setSpeed(violationDTO.getSpeed());
         violation.setEvidence(violationDTO.getEvidence());
         violation.setCreateAt(LocalDateTime.now());
 
@@ -83,8 +82,7 @@ public class ViolationService implements IViolationService {
 
         existingViolation.setVehicle(vehicle);
         existingViolation.setStreet(street);
-        existingViolation.setSpeedRecorded(violationDTO.getSpeedRecorded());
-        existingViolation.setViolationLevel(violationDTO.getViolationLevel());
+        existingViolation.setSpeed(violationDTO.getSpeed());
         existingViolation.setEvidence(violationDTO.getEvidence());
         existingViolation.setCreateAt(LocalDateTime.now());
 

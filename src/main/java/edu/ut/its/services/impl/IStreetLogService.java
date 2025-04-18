@@ -9,7 +9,7 @@ import edu.ut.its.models.dtos.responses.StreetLogResponse;
 public interface IStreetLogService {
     Page<StreetLogResponse> getAllStreetLogs(Pageable pageable);
     StreetLogResponse getStreetLogById(String id);
-    StreetLogResponse createStreetLog(StreetLogRequest streetLogDTO);
+    StreetLogResponse createStreetLogFromJson(StreetLogRequest streetLogDTO);
     StreetLogResponse updateStreetLog(String id, StreetLogResponse streetLogDTO);
 }
 

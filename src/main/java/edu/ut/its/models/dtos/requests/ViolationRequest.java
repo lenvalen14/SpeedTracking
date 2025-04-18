@@ -20,8 +20,7 @@ public class ViolationRequest {
     private String vehicleId;
     @NotBlank(message = "Street ID is required")
     private String streetId;
-    private float speedRecorded;
-    private ViolationLevel violationLevel;
+    private float speed;
     private String evidence;
     @Builder.Default
     private LocalDateTime createAt = LocalDateTime.now();

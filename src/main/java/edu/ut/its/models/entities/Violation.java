@@ -23,8 +23,7 @@ public class Violation {
     @DBRef
     private Street street;
 
-    private float speedRecorded;
-    private ViolationLevel violationLevel;
+    private float speed;
     private String evidence;
     private LocalDateTime createAt;
 }

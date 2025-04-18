@@ -15,8 +15,7 @@ public class ViolationResponse {
     private String violationId;
     private VehicleDTO vehicle;
     private StreetDetailResponse street;
-    private float speedRecorded;
-    private ViolationLevel violationLevel;
+    private float speed;
     private String evidence;
     private LocalDateTime createAt;
 }

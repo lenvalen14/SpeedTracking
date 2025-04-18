@@ -16,7 +16,5 @@ public class VehicleDTO {
     private String vehicleId;
     private String licensePlates;
     private VehicleType type;
-    private boolean priority;
-    @Builder.Default
-    private LocalDateTime createAt= LocalDateTime.now();
+    private LocalDateTime createAt;
 }

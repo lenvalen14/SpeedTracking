@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import edu.ut.its.models.dtos.VehicleDTO;
 
@@ -14,9 +15,9 @@ import edu.ut.its.models.dtos.VehicleDTO;
 public class StreetLogResponse {
     private String streetLogId;
     private StreetDetailResponse street;
-    private VehicleDTO vehicle;
-    private float speedAverage;
-    private int density;
-    private int violationCount;
+    private List<VehicleDTO> vehicles;
+    private float speedAvg;
+    private int vehiclesCount;
+    private int violatorsCount;
     private LocalDateTime createAt;
 }

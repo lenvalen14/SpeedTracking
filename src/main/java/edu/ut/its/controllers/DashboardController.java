@@ -36,8 +36,7 @@ public class DashboardController {
     @GetMapping("/average-density")
     public double getAverageDensity(
             @RequestParam String streetId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-            @RequestParam double length) {
-        return dashboardService.getAverageDensityByStreetAndDate(streetId, date, length);
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return dashboardService.getAverageDensityByStreetAndDate(streetId, date);
     }
 }

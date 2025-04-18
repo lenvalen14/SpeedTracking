@@ -62,25 +62,42 @@ public class StreetLogController {
         }
     }
 
-    @PostMapping()
-    public ResponseEntity<ResponseWrapper<StreetLogResponse>> createStreetLog(
-            @Valid  @RequestBody StreetLogRequest streetLogDTO)
+//    @PostMapping()
+//    public ResponseEntity<ResponseWrapper<StreetLogResponse>> createStreetLog(
+//            @Valid  @RequestBody StreetLogRequest streetLogDTO)
+//    {
+//        try {
+//            StreetLogResponse responses = streetLogService.createStreetLog(streetLogDTO);
+//
+//            ResponseWrapper<StreetLogResponse> responseWrapper =
+//                    new ResponseWrapper<>("Create StreetLog Successfully", responses);
+//
+//            return ResponseEntity.status(HttpStatus.CREATED).body(responseWrapper);
+//        }
+//        catch (Exception e) {
+//            ResponseWrapper<StreetLogResponse> responseWrapper =
+//                    new ResponseWrapper<>(e.getMessage(), null);
+//
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseWrapper);
+//        }
+//    }
+
+    @PostMapping("/from-json")
+    public ResponseEntity<ResponseWrapper<StreetLogResponse>> createStreetLogFromJson(
+            @Valid @RequestBody StreetLogRequest streetLogDTO)
     {
         try {
-            StreetLogResponse responses = streetLogService.createStreetLog(streetLogDTO);
-
+            StreetLogResponse responses = streetLogService.createStreetLogFromJson(streetLogDTO);
             ResponseWrapper<StreetLogResponse> responseWrapper =
                     new ResponseWrapper<>("Create StreetLog Successfully", responses);
-
             return ResponseEntity.status(HttpStatus.CREATED).body(responseWrapper);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             ResponseWrapper<StreetLogResponse> responseWrapper =
                     new ResponseWrapper<>(e.getMessage(), null);
-
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseWrapper);
         }
     }
+
 
     @PutMapping("/{requestID}")
     public ResponseEntity<ResponseWrapper<StreetLogResponse>> updateStreetLog(
