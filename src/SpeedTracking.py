@@ -25,7 +25,6 @@ SOURCE = np.array([[1252, 787], [2298, 803], [5039, 2159], [-550, 2159]])
 TARGET_WIDTH, TARGET_HEIGHT = 25, 250
 TARGET = np.array([[0, 0], [TARGET_WIDTH - 1, 0], [TARGET_WIDTH - 1, TARGET_HEIGHT - 1], [0, TARGET_HEIGHT - 1]])
 
-# Dùng PaddleOCR thay vì EasyOCR
 ocr_model = PaddleOCR(use_angle_cls=True, lang='en', show_log=False)
 
 # Hàm nhận diện biển số
@@ -178,9 +177,20 @@ async def detect_speed(video_file: UploadFile = File(...), speed_limit: float = 
 
         uploaded_video = cloudinary.uploader.upload(output_path, resource_type="video", folder="videos")
 
+        # Tính tốc độ trung bình
+        if processed_vehicles:
+            speed_avg = round(
+                sum(v["speed"] for v in processed_vehicles.values()) / len(processed_vehicles), 2
+            )
+        else:
+            speed_avg = 0.0
+
         return JSONResponse(content={
+            "violatorsCount": len(processed_violators),
             "violators": list(processed_violators.values()),
             "vehicles": list(processed_vehicles.values()),
+            "vehiclesCount": len(processed_vehicles),
+            "speedAvg": speed_avg,
             "output_video_url": uploaded_video["secure_url"]
         })
 
