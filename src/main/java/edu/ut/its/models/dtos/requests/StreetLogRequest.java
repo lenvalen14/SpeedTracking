@@ -19,8 +19,8 @@ public class StreetLogRequest {
     private String streetLogId;
     @NotBlank(message = "Street ID is required")
     private String streetId;
-    @NotBlank(message = "Camera ID is required")
-    private String cameraId;
+//    @NotBlank(message = "Camera ID is required")
+//    private String cameraId;
     @NotEmpty(message = "Violation ID is required")
     private List<ViolatorRequestJsonAI> violators;
     @NotEmpty(message = "Vehicle ID is required")
