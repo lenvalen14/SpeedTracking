@@ -74,10 +74,12 @@ async def detect_speed(video_file: UploadFile = File(...), speed_limit: float = 
         polygon_zone = sv.PolygonZone(polygon=SOURCE)
         frame_gen = sv.get_video_frames_generator(source_path=input_path)
 
-        coordinates, time_records = defaultdict(lambda: deque(maxlen=video_info.fps)), defaultdict(lambda: deque(maxlen=video_info.fps))
+        coordinates = defaultdict(lambda: deque(maxlen=video_info.fps))
+        time_records = defaultdict(lambda: deque(maxlen=video_info.fps))
         frame_count = 0
         processed_vehicles, processed_violators = {}, {}
         best_violation_images = {}
+        all_vehicle_plates = {}
         vehicle_class = {1: "bicycle", 2: "car", 3: "motorcycle", 5: "bus", 7: "truck"}
 
         with sv.VideoSink(output_path, video_info) as sink:
@@ -101,6 +103,18 @@ async def detect_speed(video_file: UploadFile = File(...), speed_limit: float = 
                     box = detections.xyxy[i]
                     class_id = detections.class_id[i] if hasattr(detections, 'class_id') else None
 
+                    x1, y1, x2, y2 = map(int, box)
+                    cropped = frame[y1:y2, x1:x2]
+
+                    # Nhận diện biển số nếu chưa có
+                    if tracker_id not in all_vehicle_plates:
+                        plate = detect_license_plate(cropped)
+                        if plate != "Unknown":
+                            all_vehicle_plates[tracker_id] = {
+                                "license_plate": plate,
+                                "vehicle_type": vehicle_class.get(int(class_id), "unknown") if class_id else "unknown"
+                            }
+
                     if len(coordinates[tracker_id]) < video_info.fps / 2:
                         labels.append(f"#{tracker_id}")
                         colors.append((0, 255, 0))
@@ -115,20 +129,20 @@ async def detect_speed(video_file: UploadFile = File(...), speed_limit: float = 
 
                             if tracker_id not in processed_vehicles or speed > processed_vehicles[tracker_id]["speed"]:
                                 vehicle_type = vehicle_class.get(int(class_id), "unknown") if class_id else "unknown"
-                                processed_vehicles[tracker_id] = {"tracker_id": int(tracker_id), "speed": round(speed, 2), "type": vehicle_type}
+                                processed_vehicles[tracker_id] = {
+                                    "tracker_id": int(tracker_id),
+                                    "speed": round(speed, 2),
+                                    "type": vehicle_type
+                                }
 
                             if speed > speed_limit:
-                                x1, y1, x2, y2 = map(int, box)
-                                cropped = frame[y1:y2, x1:x2]
                                 area = (x2 - x1) * (y2 - y1)
-
                                 if (tracker_id not in best_violation_images) or (area > best_violation_images[tracker_id]["area"]):
                                     best_violation_images[tracker_id] = {
                                         "image": cropped,
                                         "speed": speed,
                                         "area": area
                                     }
-
                                 colors.append((0, 0, 255))
                             else:
                                 colors.append((0, 255, 0))
@@ -142,7 +156,7 @@ async def detect_speed(video_file: UploadFile = File(...), speed_limit: float = 
                 cv2.polylines(frame, [SOURCE.reshape((-1, 1, 2))], True, (0, 255, 255), 2)
                 sink.write_frame(frame)
 
-        # OCR + Upload Cloudinary
+        # OCR + Upload Cloudinary cho xe vi phạm
         for tracker_id, data in best_violation_images.items():
             save_path = os.path.join(violation_dir, f"{int(tracker_id)}_{int(data['speed'])}.jpg")
             cv2.imwrite(save_path, data["image"])
@@ -155,6 +169,12 @@ async def detect_speed(video_file: UploadFile = File(...), speed_limit: float = 
                 "image_url": uploaded["secure_url"],
                 "license_plate": plate_text
             }
+
+        # Gán biển số cho tất cả phương tiện vào danh sách
+        for tracker_id, info in processed_vehicles.items():
+            plate_info = all_vehicle_plates.get(tracker_id)
+            if plate_info:
+                info["license_plate"] = plate_info["license_plate"]
 
         uploaded_video = cloudinary.uploader.upload(output_path, resource_type="video", folder="videos")
 
