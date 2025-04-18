@@ -26,7 +26,7 @@ public class StreetService implements IStreetService {
         Page<Street> streets = streetRepo.findAll(pageable);
 
         if (streets.isEmpty()) {
-            throw new DataNotFoundException("Street not found");
+            throw new AppException(ErrorCode.STREET_NOT_FOUND);
         }
 
         return streets.map(streetMapper::toStreetDTO);
