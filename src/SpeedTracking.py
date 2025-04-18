@@ -1,18 +1,16 @@
 from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.responses import JSONResponse
-import os
-import uuid
-import cv2
-import numpy as np
+import os, uuid, cv2, numpy as np
 from ultralytics import YOLO
 import supervision as sv
 from collections import defaultdict, deque
 from dotenv import load_dotenv
 import cloudinary
 import cloudinary.uploader
+from paddleocr import PaddleOCR
 
+# Load .env + cấu hình Cloudinary
 load_dotenv(dotenv_path="src/.env")
-
 cloudinary.config(
     cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
     api_key=os.getenv("CLOUDINARY_API_KEY"),
@@ -22,10 +20,23 @@ cloudinary.config(
 
 app = FastAPI()
 
+# Khai báo vùng zone để tính tốc độ
 SOURCE = np.array([[1252, 787], [2298, 803], [5039, 2159], [-550, 2159]])
 TARGET_WIDTH, TARGET_HEIGHT = 25, 250
 TARGET = np.array([[0, 0], [TARGET_WIDTH - 1, 0], [TARGET_WIDTH - 1, TARGET_HEIGHT - 1], [0, TARGET_HEIGHT - 1]])
 
+# Dùng PaddleOCR thay vì EasyOCR
+ocr_model = PaddleOCR(use_angle_cls=True, lang='en', show_log=False)
+
+# Hàm nhận diện biển số
+def detect_license_plate(image: np.ndarray) -> str:
+    result = ocr_model.ocr(image, cls=True)
+    if result and result[0]:
+        texts = [line[1][0] for line in result[0] if line[1][1] > 0.5]  # confidence > 50%
+        return " ".join(texts)
+    return "Unknown"
+
+# Xử lý transform
 class ViewTransformer:
     def __init__(self, source: np.ndarray, target: np.ndarray) -> None:
         self.m = cv2.getPerspectiveTransform(source.astype(np.float32), target.astype(np.float32))
@@ -37,6 +48,7 @@ class ViewTransformer:
         transformed_points = cv2.perspectiveTransform(reshaped_points, self.m)
         return transformed_points.reshape(-1, 2)
 
+# Endpoint chính
 @app.post("/detect-speed")
 async def detect_speed(video_file: UploadFile = File(...), speed_limit: float = Form(...)):
     file_id = str(uuid.uuid4())
@@ -52,30 +64,31 @@ async def detect_speed(video_file: UploadFile = File(...), speed_limit: float = 
         model = YOLO("model/yolov8x.pt")
         video_info = sv.VideoInfo.from_video_path(input_path)
         byte_track = sv.ByteTrack(frame_rate=video_info.fps, track_activation_threshold=0.3)
-        box_annotator = sv.BoxAnnotator(thickness=2)
-        label_annotator = sv.LabelAnnotator(text_position=sv.Position.BOTTOM_CENTER)
-        trace_annotator = sv.TraceAnnotator(trace_length=video_info.fps * 2, position=sv.Position.BOTTOM_CENTER)
-        view_transformer = ViewTransformer(source=SOURCE, target=TARGET)
+        annotators = {
+            "box": sv.BoxAnnotator(thickness=2),
+            "label": sv.LabelAnnotator(text_position=sv.Position.BOTTOM_CENTER),
+            "trace": sv.TraceAnnotator(trace_length=video_info.fps * 2, position=sv.Position.BOTTOM_CENTER)
+        }
+
+        transformer = ViewTransformer(source=SOURCE, target=TARGET)
         polygon_zone = sv.PolygonZone(polygon=SOURCE)
-        frame_generator = sv.get_video_frames_generator(source_path=input_path)
+        frame_gen = sv.get_video_frames_generator(source_path=input_path)
 
-        coordinates = defaultdict(lambda: deque(maxlen=video_info.fps))
-        time_records = defaultdict(lambda: deque(maxlen=video_info.fps))
+        coordinates, time_records = defaultdict(lambda: deque(maxlen=video_info.fps)), defaultdict(lambda: deque(maxlen=video_info.fps))
         frame_count = 0
-        processed_vehicles = {}
-        processed_violators = {}
-
+        processed_vehicles, processed_violators = {}, {}
+        best_violation_images = {}
         vehicle_class = {1: "bicycle", 2: "car", 3: "motorcycle", 5: "bus", 7: "truck"}
 
         with sv.VideoSink(output_path, video_info) as sink:
-            for frame in frame_generator:
+            for frame in frame_gen:
                 frame_count += 1
                 result = model(frame)[0]
                 detections = sv.Detections.from_ultralytics(result)
                 detections = detections[detections.confidence > 0.3]
                 detections = detections[polygon_zone.trigger(detections)].with_nms(threshold=0.7)
                 detections = byte_track.update_with_detections(detections=detections)
-                points = view_transformer.transform_points(detections.get_anchors_coordinates(anchor=sv.Position.BOTTOM_CENTER)).astype(int)
+                points = transformer.transform_points(detections.get_anchors_coordinates(anchor=sv.Position.BOTTOM_CENTER)).astype(int)
 
                 for tracker_id, point in zip(detections.tracker_id, points):
                     coordinates[tracker_id].append(point)
@@ -92,8 +105,8 @@ async def detect_speed(video_file: UploadFile = File(...), speed_limit: float = 
                         labels.append(f"#{tracker_id}")
                         colors.append((0, 255, 0))
                     else:
-                        start_point, end_point = coordinates[tracker_id][0], coordinates[tracker_id][-1]
-                        distance = np.linalg.norm(np.array(end_point) - np.array(start_point))
+                        start, end = coordinates[tracker_id][0], coordinates[tracker_id][-1]
+                        distance = np.linalg.norm(np.array(end) - np.array(start))
                         time_elapsed = time_records[tracker_id][-1] - time_records[tracker_id][0]
 
                         if time_elapsed > 0:
@@ -105,19 +118,17 @@ async def detect_speed(video_file: UploadFile = File(...), speed_limit: float = 
                                 processed_vehicles[tracker_id] = {"tracker_id": int(tracker_id), "speed": round(speed, 2), "type": vehicle_type}
 
                             if speed > speed_limit:
-                                if tracker_id not in processed_violators or speed > processed_violators[tracker_id]["speed"]:
-                                    x1, y1, x2, y2 = map(int, box)
-                                    cropped = frame[y1:y2, x1:x2]
-                                    save_path = os.path.join(violation_dir, f"{int(tracker_id)}_{int(speed)}.jpg")
-                                    cv2.imwrite(save_path, cropped)
+                                x1, y1, x2, y2 = map(int, box)
+                                cropped = frame[y1:y2, x1:x2]
+                                area = (x2 - x1) * (y2 - y1)
 
-                                    # Upload ảnh vi phạm
-                                    uploaded_image = cloudinary.uploader.upload(save_path, folder="violations")
-                                    processed_violators[tracker_id] = {
-                                        "tracker_id": int(tracker_id),
-                                        "speed": round(speed, 2),
-                                        "image_url": uploaded_image["secure_url"]
+                                if (tracker_id not in best_violation_images) or (area > best_violation_images[tracker_id]["area"]):
+                                    best_violation_images[tracker_id] = {
+                                        "image": cropped,
+                                        "speed": speed,
+                                        "area": area
                                     }
+
                                 colors.append((0, 0, 255))
                             else:
                                 colors.append((0, 255, 0))
@@ -125,13 +136,26 @@ async def detect_speed(video_file: UploadFile = File(...), speed_limit: float = 
                             labels.append(f"#{tracker_id}")
                             colors.append((0, 255, 0))
 
-                annotated_frame = trace_annotator.annotate(frame.copy(), detections)
-                annotated_frame = box_annotator.annotate(annotated_frame, detections=detections)
-                annotated_frame = label_annotator.annotate(annotated_frame, detections, labels=labels)
-                cv2.polylines(annotated_frame, [SOURCE.reshape((-1, 1, 2))], True, (0, 255, 255), 2)
-                sink.write_frame(annotated_frame)
+                frame = annotators["trace"].annotate(frame.copy(), detections)
+                frame = annotators["box"].annotate(frame, detections=detections)
+                frame = annotators["label"].annotate(frame, detections, labels=labels)
+                cv2.polylines(frame, [SOURCE.reshape((-1, 1, 2))], True, (0, 255, 255), 2)
+                sink.write_frame(frame)
 
-        # Upload video đầu ra
+        # OCR + Upload Cloudinary
+        for tracker_id, data in best_violation_images.items():
+            save_path = os.path.join(violation_dir, f"{int(tracker_id)}_{int(data['speed'])}.jpg")
+            cv2.imwrite(save_path, data["image"])
+            uploaded = cloudinary.uploader.upload(save_path, folder="violations")
+            plate_text = detect_license_plate(data["image"])
+
+            processed_violators[tracker_id] = {
+                "tracker_id": int(tracker_id),
+                "speed": round(data["speed"], 2),
+                "image_url": uploaded["secure_url"],
+                "license_plate": plate_text
+            }
+
         uploaded_video = cloudinary.uploader.upload(output_path, resource_type="video", folder="videos")
 
         return JSONResponse(content={
@@ -142,6 +166,7 @@ async def detect_speed(video_file: UploadFile = File(...), speed_limit: float = 
 
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
+
     finally:
         for path in [input_path, output_path]:
             if os.path.exists(path):
