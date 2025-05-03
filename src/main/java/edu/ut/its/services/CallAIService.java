@@ -81,7 +81,6 @@ public class CallAIService {
         System.out.println("AI result: " + result);
     }
 
-    @Scheduled(fixedRate = 30 * 60 * 1000)
     public void test() {
         String url = "https://res.cloudinary.com/dutpq11xs/video/upload/v1746263489/fbjjr597q8jq3e6ozyli.mp4";
         int speedLimit = 100;

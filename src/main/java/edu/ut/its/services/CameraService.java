@@ -28,6 +28,7 @@ public class CameraService implements ICameraService {
     private final StreetRepo streetRepo;
     private final CameraMapper cameraMapper;
     private final FileUploadService fileUploadService;
+    private final CallAIService callAIService;
 
 
     @Override
@@ -65,6 +66,9 @@ public class CameraService implements ICameraService {
         Camera savedCamera = cameraRepo.save(camera);
 
         updateStreetCameraCount(street);
+
+        callAIService.autoDetectSpeed(savedCamera.getVideoUrl(), savedCamera.getStreet().getSpeedLimit(),
+                savedCamera.getStreet().getStreetId(), savedCamera.getCameraId());
 
         return cameraMapper.toCameraDTO(savedCamera);
     }
