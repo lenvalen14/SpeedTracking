@@ -62,10 +62,17 @@ public class AccountService implements IAccountService {
         Account account = new Account();
         account.setName(accountDTO.getName());
         account.setEmail(accountDTO.getEmail());
+        account.setPhone(accountDTO.getPhone());
+        account.setLocation(accountDTO.getLocation());
+        account.setDepartment(accountDTO.getDepartment());
 
         account.setPassword(passwordEncoder.encode(accountDTO.getPassword()));
 
-        account.setRole(AccountRole.USER);
+        if(accountDTO.getRole() == null) {
+            accountDTO.setRole(AccountRole.OPERATOR);
+        }
+
+        account.setRole(accountDTO.getRole());
         account.setStatus(true);
         account.setCreateAt(LocalDateTime.now());
 

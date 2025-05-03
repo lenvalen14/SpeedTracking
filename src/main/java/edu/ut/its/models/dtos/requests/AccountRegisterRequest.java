@@ -28,6 +28,16 @@ public class AccountRegisterRequest {
     @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
 
+    @NotBlank(message = "phone is required")
+    @Size(min = 10, message = "phone must be at least 8 characters")
+    private String phone;
+
+    @NotBlank(message = "location is required")
+    private String location;
+
+    @NotBlank(message = "department is required")
+    private String department;
+
     private AccountRole role;
 
     @Builder.Default

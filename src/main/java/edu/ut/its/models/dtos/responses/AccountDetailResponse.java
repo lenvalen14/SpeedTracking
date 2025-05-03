@@ -15,6 +15,9 @@ public class AccountDetailResponse {
     private String name;
     private String email;
     private String password;
+    private String phone;
+    private String location;
+    private String department;
     private AccountRole role;
     private Boolean status;
     private LocalDateTime createAt;

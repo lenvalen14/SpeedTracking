@@ -25,6 +25,9 @@ public class Account {
     private String name;
     private String email;
     private String password;
+    private String phone;
+    private String location;
+    private String department;
     private AccountRole role;
     private boolean status;
     private LocalDateTime createAt;

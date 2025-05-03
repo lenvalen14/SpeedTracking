@@ -1,42 +1,58 @@
 package edu.ut.its.controllers;
 
+import edu.ut.its.models.dtos.responses.ChartDataResponse;
+import edu.ut.its.models.dtos.responses.ViolationRate;
 import edu.ut.its.services.impl.IDashboardService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
-@RequestMapping("/dashboard")
+@RequestMapping("/api/dashboard")
 @RequiredArgsConstructor
 public class DashboardController {
 
     private final IDashboardService dashboardService;
 
-    @GetMapping("/vehicles")
-    public int getTotalVehicles(
-            @RequestParam String streetId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return dashboardService.getTotalVehiclesByStreetAndDate(streetId, date);
+    @GetMapping("/realtime")
+    public ChartDataResponse getRealtimeStats(
+            @RequestParam String streetId
+    ) {
+        return dashboardService.getRealtimeStats(streetId);
     }
 
-    @GetMapping("/cameras")
-    public int getTotalCameras(@RequestParam String streetId) {
-        return dashboardService.getTotalCamerasByStreet(streetId);
+
+    @GetMapping("/weekly")
+    public ChartDataResponse getWeeklyStats(
+            @RequestParam String streetId,
+            @RequestParam int year,
+            @RequestParam int month
+    ) {
+        ChartDataResponse stats = dashboardService.getWeeklyStats(streetId, year, month);
+        System.out.println("Weekly Traffic Stats: " + stats);
+        return stats;
     }
 
-    @GetMapping("/average-speed")
-    public double getAverageSpeed(
+    @GetMapping("/monthly")
+    public ChartDataResponse getMonthlyStats(
             @RequestParam String streetId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return dashboardService.getAverageSpeedByStreetAndDate(streetId, date);
+            @RequestParam int year
+    ) {
+        ChartDataResponse stats = dashboardService.getMonthlyStats(streetId, year);
+        System.out.println("Traffic Stats: " + stats);
+        return stats;
     }
 
-    @GetMapping("/average-density")
-    public double getAverageDensity(
-            @RequestParam String streetId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return dashboardService.getAverageDensityByStreetAndDate(streetId, date);
+    @GetMapping("/violationRate")
+    public ViolationRate getViolationRateStats(
+            @RequestParam String steetID
+    ){
+        ViolationRate response = dashboardService.getViolationCountRealtime(steetID);
+        System.out.println("Violation rate: " + response);
+        return response;
     }
 }
