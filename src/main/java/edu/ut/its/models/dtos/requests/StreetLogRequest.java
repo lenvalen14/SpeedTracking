@@ -34,4 +34,5 @@ public class StreetLogRequest {
     private int violatorsCount;
     @Builder.Default
     private LocalDateTime createAt = LocalDateTime.now();
+    private String output_video_url;
 }
