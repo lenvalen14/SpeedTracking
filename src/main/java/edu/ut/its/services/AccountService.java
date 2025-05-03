@@ -2,9 +2,9 @@ package edu.ut.its.services;
 
 import edu.ut.its.components.JwtTokenUtils;
 import edu.ut.its.exceptions.AppException;
-import edu.ut.its.exceptions.DataNotFoundException;
 import edu.ut.its.exceptions.ErrorCode;
 import edu.ut.its.mappers.AccountMapper;
+import edu.ut.its.models.dtos.requests.AccountForgotPasswordRequest;
 import edu.ut.its.models.dtos.requests.AccountLoginRequest;
 import edu.ut.its.models.dtos.requests.AccountRegisterRequest;
 import edu.ut.its.models.dtos.requests.AccountUpdateRequest;
@@ -116,6 +116,21 @@ public class AccountService implements IAccountService {
         accountMapper.updateAccountFromRequest(accountDTO, existing);
 
         return accountMapper.toAccountDTO(accountRepo.save(existing));
+    }
+
+    @Override
+    public AccountDetailResponse forgotPassword(String email, AccountForgotPasswordRequest request){
+        Account account = accountRepo.findByEmail(email);
+
+        if(account == null)
+            throw new AppException(ErrorCode.ACCOUNT_NOT_FOUND);
+
+        if(!request.getPassword().equals(request.getRetypedPassword()))
+            throw new AppException(ErrorCode.ACCOUNT_PASSWORD_CONFIRM_NOT_MATCH);
+
+        account.setPassword(passwordEncoder.encode(request.getPassword()));
+        accountRepo.save(account);
+        return accountMapper.toAccountDTO(accountRepo.save(account));
     }
 
     @Override

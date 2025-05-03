@@ -23,6 +23,7 @@ public enum ErrorCode {
     ACCOUNT_EMAIL_INVALID_FORMAT(1202, "Email format is invalid", HttpStatus.BAD_REQUEST),
     ACCOUNT_USERNAME_INVALID_FORMAT(1203, "Username format is invalid", HttpStatus.BAD_REQUEST),
     ACCOUNT_PASSWORD_INVALID(1204, "Password is invalid", HttpStatus.BAD_REQUEST),
+    ACCOUNT_PASSWORD_CONFIRM_NOT_MATCH(1205, "Password confirmation does not match", HttpStatus.BAD_REQUEST),
 
     // Permission (1300-1399)
     ACCOUNT_INSUFFICIENT_PRIVILEGES(1300, "Insufficient account privileges", HttpStatus.FORBIDDEN),

@@ -2,6 +2,7 @@ package edu.ut.its.controllers;
 
 import edu.ut.its.components.JwtTokenUtils;
 import edu.ut.its.models.dtos.TokenDTO;
+import edu.ut.its.models.dtos.requests.AccountForgotPasswordRequest;
 import edu.ut.its.models.dtos.requests.AccountLoginRequest;
 import edu.ut.its.models.dtos.requests.AccountRegisterRequest;
 import edu.ut.its.models.dtos.requests.AccountUpdateRequest;
@@ -23,7 +24,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -161,6 +161,26 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.OK).body(responseWrapper);
         }
         catch (RuntimeException ex) {
+            ResponseWrapper<AccountDetailResponse> responseWrapper =
+                    new ResponseWrapper<>(ex.getMessage(), null);
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseWrapper);
+        }
+    }
+
+    @PutMapping("/forgot-password/{email}")
+    public ResponseEntity<ResponseWrapper<AccountDetailResponse>> forgotPassword(
+            @PathVariable String email,
+            @Valid @RequestBody AccountForgotPasswordRequest request
+    ){
+        try {
+            AccountDetailResponse account = accountService.forgotPassword(email, request);
+
+            ResponseWrapper<AccountDetailResponse> responseWrapper =
+                    new ResponseWrapper<>("Reset password successfully", account);
+
+            return ResponseEntity.status(HttpStatus.OK).body(responseWrapper);
+        } catch (RuntimeException ex) {
             ResponseWrapper<AccountDetailResponse> responseWrapper =
                     new ResponseWrapper<>(ex.getMessage(), null);
 

@@ -1,5 +1,6 @@
 package edu.ut.its.services.impl;
 
+import edu.ut.its.models.dtos.requests.AccountForgotPasswordRequest;
 import edu.ut.its.models.dtos.requests.AccountLoginRequest;
 import edu.ut.its.models.dtos.requests.AccountRegisterRequest;
 import edu.ut.its.models.dtos.requests.AccountUpdateRequest;
@@ -18,5 +19,8 @@ public interface IAccountService {
     Account getUserDetailsFromToken(String token) throws Exception;
 
     AccountDetailResponse updateAccount(String id, AccountUpdateRequest accountDTO);
+
+    AccountDetailResponse forgotPassword(String email, AccountForgotPasswordRequest request);
+
     Boolean deleteAccount(String id);
 }
