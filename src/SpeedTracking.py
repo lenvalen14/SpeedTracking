@@ -1,6 +1,7 @@
-from fastapi import FastAPI, File, UploadFile, Form
+from fastapi import FastAPI, Form
 from fastapi.responses import JSONResponse
 import os, uuid, cv2, numpy as np
+import requests
 from ultralytics import YOLO
 import supervision as sv
 from collections import defaultdict, deque
@@ -35,6 +36,20 @@ def detect_license_plate(image: np.ndarray) -> str:
         return " ".join(texts)
     return "Unknown"
 
+# Hàm tải video từ URL
+def download_video_from_url(url: str, local_path: str) -> bool:
+    try:
+        response = requests.get(url, stream=True)
+        response.raise_for_status()
+        
+        with open(local_path, 'wb') as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                f.write(chunk)
+        return True
+    except Exception as e:
+        print(f"Error downloading video: {e}")
+        return False
+
 # Xử lý transform
 class ViewTransformer:
     def __init__(self, source: np.ndarray, target: np.ndarray) -> None:
@@ -47,9 +62,9 @@ class ViewTransformer:
         transformed_points = cv2.perspectiveTransform(reshaped_points, self.m)
         return transformed_points.reshape(-1, 2)
 
-# Endpoint chính
-@app.post("/detect-speed")
-async def detect_speed(video_file: UploadFile = File(...), speed_limit: float = Form(...)):
+# Endpoint chính - nhận video URL thay vì file upload
+@app.post("/detect-speed-from-url")
+async def detect_speed_from_url(video_url: str = Form(...), speed_limit: float = Form(...)):
     file_id = str(uuid.uuid4())
     input_path = f"temp_{file_id}.mp4"
     output_path = f"output_{file_id}.mp4"
@@ -57,8 +72,10 @@ async def detect_speed(video_file: UploadFile = File(...), speed_limit: float = 
     os.makedirs(violation_dir, exist_ok=True)
 
     try:
-        with open(input_path, "wb") as f:
-            f.write(await video_file.read())
+        # Tải video từ URL
+        download_success = download_video_from_url(video_url, input_path)
+        if not download_success:
+            return JSONResponse(status_code=500, content={"error": "Failed to download video from URL"})
 
         model = YOLO("model/yolov8x.pt")
         video_info = sv.VideoInfo.from_video_path(input_path)
@@ -201,3 +218,7 @@ async def detect_speed(video_file: UploadFile = File(...), speed_limit: float = 
         for path in [input_path, output_path]:
             if os.path.exists(path):
                 os.remove(path)
+        
+        import shutil
+        if os.path.exists(violation_dir):
+            shutil.rmtree(violation_dir)
