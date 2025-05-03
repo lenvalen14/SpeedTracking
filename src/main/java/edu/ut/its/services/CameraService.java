@@ -70,7 +70,10 @@ public class CameraService implements ICameraService {
         callAIService.autoDetectSpeed(savedCamera.getVideoUrl(), savedCamera.getStreet().getSpeedLimit(),
                 savedCamera.getStreet().getStreetId(), savedCamera.getCameraId());
 
-        return cameraMapper.toCameraDTO(savedCamera);
+        Camera afterCamera = cameraRepo.findByCameraIdAndStatusTrue(savedCamera.getCameraId())
+                .orElseThrow(() -> new AppException(ErrorCode.CAMERA_NOT_FOUND));
+
+        return cameraMapper.toCameraDTO(afterCamera);
     }
 
 
