@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,6 +22,7 @@ public class ViolationController {
     ViolationService violationService;
 
     @GetMapping()
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ResponseWrapper<Page<ViolationResponse>>> getAllViolation(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
@@ -43,6 +45,7 @@ public class ViolationController {
     }
 
     @GetMapping("/{requestID}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ResponseWrapper<ViolationResponse>> getViolation(
             @PathVariable String requestID)
     {
@@ -63,6 +66,7 @@ public class ViolationController {
     }
 
     @PostMapping()
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ResponseWrapper<ViolationResponse>> createViolation(
             @Valid  @RequestBody ViolationRequest violationDTO)
     {
@@ -83,6 +87,7 @@ public class ViolationController {
     }
 
     @PutMapping("/{requestID}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ResponseWrapper<ViolationResponse>> updateViolation(
             @Valid @RequestBody ViolationResponse violationDTO,
             @PathVariable String requestID)

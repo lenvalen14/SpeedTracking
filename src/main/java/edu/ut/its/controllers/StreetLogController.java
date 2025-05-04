@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,6 +22,7 @@ public class StreetLogController {
     private StreetLogService streetLogService;
 
     @GetMapping()
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ResponseWrapper<Page<StreetLogResponse>>> getAllStreetLog(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
@@ -43,6 +45,7 @@ public class StreetLogController {
     }
 
     @GetMapping("/{requestID}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ResponseWrapper<StreetLogResponse>> getStreetLog(
             @PathVariable String requestID)
     {
@@ -83,6 +86,7 @@ public class StreetLogController {
 //    }
 
     @PostMapping("/from-json")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ResponseWrapper<StreetLogResponse>> createStreetLogFromJson(
             @Valid @RequestBody StreetLogRequest streetLogDTO)
     {
@@ -100,6 +104,7 @@ public class StreetLogController {
 
 
     @PutMapping("/{requestID}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ResponseWrapper<StreetLogResponse>> updateStreetLog(
             @Valid @RequestBody StreetLogResponse streetLogDTO,
             @PathVariable String requestID)

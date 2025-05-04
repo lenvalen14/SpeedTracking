@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,6 +22,7 @@ public class StreetController {
     private StreetService streetService;
 
     @GetMapping()
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ResponseWrapper<Page<StreetDetailResponse>>> getAllStreets(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
@@ -43,6 +45,7 @@ public class StreetController {
     }
 
     @GetMapping("/{requestID}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ResponseWrapper<StreetDetailResponse>> getStreet(
             @PathVariable String requestID)
     {
@@ -63,6 +66,7 @@ public class StreetController {
     }
 
     @PostMapping()
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ResponseWrapper<StreetDetailResponse>> createStreet(
             @Valid  @RequestBody StreetCreateRequest streetCreateRequest)
     {
@@ -83,6 +87,7 @@ public class StreetController {
     }
 
     @PutMapping("/{requestID}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ResponseWrapper<StreetDetailResponse>> updateStreet(
             @Valid @RequestBody StreetDetailResponse streetDetailResponse,
             @PathVariable String requestID)

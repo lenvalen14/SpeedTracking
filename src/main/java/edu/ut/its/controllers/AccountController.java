@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,6 +46,7 @@ public class AccountController {
     }
 
     @GetMapping()
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ResponseWrapper<Page<AccountDetailResponse>>> getAllAccountDetail(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
@@ -67,6 +69,7 @@ public class AccountController {
     }
 
     @GetMapping("/{requestID}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ResponseWrapper<AccountDetailResponse>> getAccountDetailByRequestID(
             @PathVariable String requestID)
     {
@@ -86,6 +89,7 @@ public class AccountController {
     }
 
     @PostMapping("/register")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ResponseWrapper<AccountDetailResponse>> createAccount(
             @Valid @RequestBody AccountRegisterRequest accountRegisterRequest)
     {
@@ -148,6 +152,7 @@ public class AccountController {
     }
 
     @PutMapping("/{requestID}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ResponseWrapper<AccountDetailResponse>> updateAccount(
             @Valid @RequestBody AccountUpdateRequest accountUpdateRequest,
             @PathVariable String requestID    )
@@ -169,6 +174,7 @@ public class AccountController {
     }
 
     @PutMapping("/forgot-password/{email}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ResponseWrapper<AccountDetailResponse>> forgotPassword(
             @PathVariable String email,
             @Valid @RequestBody AccountForgotPasswordRequest request
@@ -189,6 +195,7 @@ public class AccountController {
     }
 
     @DeleteMapping("/{requestID}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ResponseWrapper<Boolean>> deleteAccount(
             @PathVariable String requestID)
     {

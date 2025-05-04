@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,6 +21,7 @@ public class VehicleController {
     private VehicleService vehicleService;
 
     @GetMapping()
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ResponseWrapper<Page<VehicleDTO>>> getAllVehicles(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
@@ -42,6 +44,7 @@ public class VehicleController {
     }
 
     @GetMapping("/{requestID}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ResponseWrapper<VehicleDTO>> getVehicle(
             @PathVariable String requestID)
     {
@@ -62,6 +65,7 @@ public class VehicleController {
     }
 
     @PostMapping()
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ResponseWrapper<VehicleDTO>> createVehicle(
             @Valid  @RequestBody VehicleDTO vehicleDTO)
     {
@@ -82,6 +86,7 @@ public class VehicleController {
     }
 
     @PutMapping("/{requestID}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ResponseWrapper<VehicleDTO>> updateVehicle(
             @Valid @RequestBody VehicleDTO vehicleDTO,
             @PathVariable String requestID)
