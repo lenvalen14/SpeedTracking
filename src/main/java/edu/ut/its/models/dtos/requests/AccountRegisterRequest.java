@@ -3,6 +3,7 @@ package edu.ut.its.models.dtos.requests;
 import edu.ut.its.models.enums.AccountRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,7 +30,10 @@ public class AccountRegisterRequest {
     private String password;
 
     @NotBlank(message = "phone is required")
-    @Size(min = 10, message = "phone must be at least 8 characters")
+    @Pattern(
+            regexp = "^0\\d{9}$",
+            message = "Phone number must start with 0 and be exactly 10 digits"
+    )
     private String phone;
 
     @NotBlank(message = "location is required")

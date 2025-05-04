@@ -89,7 +89,6 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ResponseWrapper<AccountDetailResponse>> createAccount(
             @Valid @RequestBody AccountRegisterRequest accountRegisterRequest)
     {
