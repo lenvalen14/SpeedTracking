@@ -22,7 +22,7 @@ public class StreetController {
     private StreetService streetService;
 
     @GetMapping()
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ResponseWrapper<Page<StreetDetailResponse>>> getAllStreets(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
@@ -45,7 +45,7 @@ public class StreetController {
     }
 
     @GetMapping("/{requestID}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ResponseWrapper<StreetDetailResponse>> getStreet(
             @PathVariable String requestID)
     {
@@ -66,7 +66,7 @@ public class StreetController {
     }
 
     @PostMapping()
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ResponseWrapper<StreetDetailResponse>> createStreet(
             @Valid  @RequestBody StreetCreateRequest streetCreateRequest)
     {
@@ -87,7 +87,7 @@ public class StreetController {
     }
 
     @PutMapping("/{requestID}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseWrapper<StreetDetailResponse>> updateStreet(
             @Valid @RequestBody StreetDetailResponse streetDetailResponse,
             @PathVariable String requestID)

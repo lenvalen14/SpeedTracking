@@ -20,7 +20,7 @@ public class DashboardController {
     private final IDashboardService dashboardService;
 
     @GetMapping("/realtime")
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ChartDataResponse getRealtimeStats(
             @RequestParam String streetId
     ) {
@@ -29,7 +29,7 @@ public class DashboardController {
 
 
     @GetMapping("/weekly")
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ChartDataResponse getWeeklyStats(
             @RequestParam String streetId,
             @RequestParam int year,
@@ -41,7 +41,7 @@ public class DashboardController {
     }
 
     @GetMapping("/monthly")
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ChartDataResponse getMonthlyStats(
             @RequestParam String streetId,
             @RequestParam int year
@@ -52,7 +52,7 @@ public class DashboardController {
     }
 
     @GetMapping("/violationRate")
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ViolationRate getViolationRateStats(
             @RequestParam String steetID
     ){

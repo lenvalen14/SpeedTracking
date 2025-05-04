@@ -49,11 +49,12 @@ public class SecurityConfig {
 
     private UserDetails convertToUserDetails(Account account) {
         Collection<GrantedAuthority> authorities = account.getAuthorities().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getAuthority()))
                 .collect(Collectors.toList());
 
         return new CustomUserDetails(account.getEmail(), account.getPassword(), authorities);
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

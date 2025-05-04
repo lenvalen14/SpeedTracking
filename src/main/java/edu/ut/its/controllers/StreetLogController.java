@@ -22,7 +22,7 @@ public class StreetLogController {
     private StreetLogService streetLogService;
 
     @GetMapping()
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ResponseWrapper<Page<StreetLogResponse>>> getAllStreetLog(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
@@ -45,7 +45,7 @@ public class StreetLogController {
     }
 
     @GetMapping("/{requestID}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ResponseWrapper<StreetLogResponse>> getStreetLog(
             @PathVariable String requestID)
     {
@@ -86,7 +86,7 @@ public class StreetLogController {
 //    }
 
     @PostMapping("/from-json")
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ResponseWrapper<StreetLogResponse>> createStreetLogFromJson(
             @Valid @RequestBody StreetLogRequest streetLogDTO)
     {
@@ -104,7 +104,7 @@ public class StreetLogController {
 
 
     @PutMapping("/{requestID}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ResponseWrapper<StreetLogResponse>> updateStreetLog(
             @Valid @RequestBody StreetLogResponse streetLogDTO,
             @PathVariable String requestID)

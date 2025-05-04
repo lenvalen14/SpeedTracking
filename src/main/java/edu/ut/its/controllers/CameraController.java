@@ -29,7 +29,7 @@ public class CameraController {
     private ObjectMapper objectMapper;
 
     @GetMapping()
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ResponseWrapper<Page<CameraDetailResponse>>> getAllCameras(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
@@ -52,7 +52,7 @@ public class CameraController {
     }
 
     @GetMapping("/{requestID}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ResponseWrapper<CameraDetailResponse>> getCamera(
             @PathVariable String requestID)
     {
@@ -73,7 +73,7 @@ public class CameraController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ResponseWrapper<CameraDetailResponse>> createCamera(
             @RequestParam("camera") String cameraCreateRequestJson,
             @RequestParam MultipartFile videoFile) {
@@ -99,7 +99,7 @@ public class CameraController {
 
 
     @PutMapping("/{requestID}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ResponseWrapper<CameraDetailResponse>> updateCamera(
             @Valid  @RequestBody CameraUpdateRequest cameraUpdateRequest,
             @PathVariable String requestID)
@@ -121,7 +121,7 @@ public class CameraController {
     }
 
     @DeleteMapping("/{requestID}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('AROLE_DMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ResponseWrapper<Boolean>> deleteCamera(
             @PathVariable String requestID)
     {

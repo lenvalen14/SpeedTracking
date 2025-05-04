@@ -46,7 +46,7 @@ public class AccountController {
     }
 
     @GetMapping()
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseWrapper<Page<AccountDetailResponse>>> getAllAccountDetail(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
@@ -69,7 +69,7 @@ public class AccountController {
     }
 
     @GetMapping("/{requestID}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ResponseWrapper<AccountDetailResponse>> getAccountDetailByRequestID(
             @PathVariable String requestID)
     {
@@ -151,7 +151,7 @@ public class AccountController {
     }
 
     @PutMapping("/{requestID}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ResponseWrapper<AccountDetailResponse>> updateAccount(
             @Valid @RequestBody AccountUpdateRequest accountUpdateRequest,
             @PathVariable String requestID    )
@@ -173,7 +173,7 @@ public class AccountController {
     }
 
     @PutMapping("/forgot-password/{email}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ResponseWrapper<AccountDetailResponse>> forgotPassword(
             @PathVariable String email,
             @Valid @RequestBody AccountForgotPasswordRequest request
@@ -194,7 +194,7 @@ public class AccountController {
     }
 
     @DeleteMapping("/{requestID}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseWrapper<Boolean>> deleteAccount(
             @PathVariable String requestID)
     {

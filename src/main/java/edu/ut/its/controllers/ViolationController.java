@@ -22,7 +22,7 @@ public class ViolationController {
     ViolationService violationService;
 
     @GetMapping()
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ResponseWrapper<Page<ViolationResponse>>> getAllViolation(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
@@ -45,7 +45,7 @@ public class ViolationController {
     }
 
     @GetMapping("/{requestID}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ResponseWrapper<ViolationResponse>> getViolation(
             @PathVariable String requestID)
     {
@@ -66,7 +66,7 @@ public class ViolationController {
     }
 
     @PostMapping()
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ResponseWrapper<ViolationResponse>> createViolation(
             @Valid  @RequestBody ViolationRequest violationDTO)
     {
@@ -87,7 +87,7 @@ public class ViolationController {
     }
 
     @PutMapping("/{requestID}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ResponseWrapper<ViolationResponse>> updateViolation(
             @Valid @RequestBody ViolationResponse violationDTO,
             @PathVariable String requestID)
