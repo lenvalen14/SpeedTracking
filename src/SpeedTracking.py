@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 import cloudinary
 import cloudinary.uploader
 from paddleocr import PaddleOCR
+import subprocess
 
 # Load .env + cấu hình Cloudinary
 load_dotenv(dotenv_path="src/.env")
@@ -77,7 +78,7 @@ async def detect_speed_from_url(video_url: str = Form(...), speed_limit: float =
         if not download_success:
             return JSONResponse(status_code=500, content={"error": "Failed to download video from URL"})
 
-        model = YOLO("model/yolov8x.pt")
+        model = YOLO("model/yolov8s.pt")
         video_info = sv.VideoInfo.from_video_path(input_path)
         byte_track = sv.ByteTrack(frame_rate=video_info.fps, track_activation_threshold=0.3)
         annotators = {
@@ -192,7 +193,32 @@ async def detect_speed_from_url(video_url: str = Form(...), speed_limit: float =
             if plate_info:
                 info["license_plate"] = plate_info["license_plate"]
 
-        uploaded_video = cloudinary.uploader.upload(output_path, resource_type="video", folder="videos")
+        # Sửa metadata để hỗ trợ preview video
+        fixed_output_path = f"fixed_{file_id}.mp4"
+        ffmpeg_command = [
+            "ffmpeg",
+            "-i", output_path,
+            "-movflags", "faststart",
+            "-c:v", "libx264",  # tái mã hóa video chuẩn H.264
+            "-preset", "veryfast",
+            "-crf", "23",
+            "-c:a", "aac",      # mã hóa lại audio nếu có
+            "-b:a", "128k",
+            fixed_output_path
+        ]
+
+        # Dùng subprocess để đảm bảo ffmpeg chạy hoàn tất mới tiếp tục
+        process = subprocess.run(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        if process.returncode != 0:
+            raise RuntimeError(f"FFmpeg failed: {process.stderr.decode()}")
+
+        # Upload video
+        uploaded_video = cloudinary.uploader.upload(
+            fixed_output_path,
+            resource_type="video",
+            folder="videos"
+        )
 
         # Tính tốc độ trung bình
         if processed_vehicles:
@@ -215,10 +241,9 @@ async def detect_speed_from_url(video_url: str = Form(...), speed_limit: float =
         return JSONResponse(status_code=500, content={"error": str(e)})
 
     finally:
-        for path in [input_path, output_path]:
+        for path in [input_path, output_path, fixed_output_path]:
             if os.path.exists(path):
                 os.remove(path)
-        
         import shutil
         if os.path.exists(violation_dir):
             shutil.rmtree(violation_dir)
