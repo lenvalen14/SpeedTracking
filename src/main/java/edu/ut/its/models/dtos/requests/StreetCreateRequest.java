@@ -23,4 +23,6 @@ public class StreetCreateRequest {
 
     @Min(value = 0, message = "Camera count must be at least 0")
     private int cameraCount;
+    private String latitude;
+    private String longitude;
 }

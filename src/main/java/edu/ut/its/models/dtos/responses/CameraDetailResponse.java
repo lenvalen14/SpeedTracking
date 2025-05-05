@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CameraDetailResponse {
     private String cameraId;
-//    private StreetDetailResponse street;
+    private StreetDetailResponse street;
     private boolean status;
     private String videoUrl;
 }
