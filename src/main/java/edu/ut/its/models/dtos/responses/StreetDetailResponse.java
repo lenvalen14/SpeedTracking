@@ -13,4 +13,6 @@ public class StreetDetailResponse {
     private String area;
     private int speedLimit;
     private int cameraCount;
+    private String latitude;
+    private String longitude;
 }
