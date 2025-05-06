@@ -72,17 +72,12 @@ public class CameraController {
         }
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping()
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ResponseWrapper<CameraDetailResponse>> createCamera(
-            @RequestParam("camera") String cameraCreateRequestJson,
-            @RequestParam MultipartFile videoFile) {
-
+            @RequestBody CameraCreateRequest cameraCreateRequest) {
         try {
-            // Parse chuỗi JSON thành object
-            CameraCreateRequest cameraCreateRequest = objectMapper.readValue(cameraCreateRequestJson, CameraCreateRequest.class);
-
-            CameraDetailResponse cameraDetailResponse = cameraService.createCamera(cameraCreateRequest, videoFile);
+            CameraDetailResponse cameraDetailResponse = cameraService.createCamera(cameraCreateRequest);
 
             ResponseWrapper<CameraDetailResponse> responseWrapper =
                     new ResponseWrapper<>("Create Camera Successfully", cameraDetailResponse);

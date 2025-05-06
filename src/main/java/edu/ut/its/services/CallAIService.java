@@ -5,11 +5,10 @@ import edu.ut.its.exceptions.AppException;
 import edu.ut.its.exceptions.ErrorCode;
 import edu.ut.its.models.dtos.requests.StreetLogRequest;
 import edu.ut.its.models.dtos.responses.StreetLogResponse;
-import edu.ut.its.models.entities.Camera;
-import edu.ut.its.repositories.CameraRepo;
+import edu.ut.its.models.entities.Video;
+import edu.ut.its.repositories.VideoRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.http.*;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -21,7 +20,7 @@ public class CallAIService {
 
     private final RestTemplate restTemplate;
     private final StreetLogService streetLogService;
-    private final CameraRepo cameraRepo;
+    private final VideoRepo videoRepo;
 
     public String detectSpeed(String videoUrl, int speedLimit) {
         String url = "http://127.0.0.1:8000/detect-speed-from-url";
@@ -39,7 +38,7 @@ public class CallAIService {
         return response.getBody();
     }
 
-    public void autoDetectSpeed(String videoUrl, int speedLimit, String streetID, String cameraID) {
+    public void autoDetectSpeed(String videoUrl, int speedLimit, String streetID, String videoID) {
         try {
             String jsonResult = detectSpeed(videoUrl, speedLimit);
 
@@ -65,11 +64,12 @@ public class CallAIService {
 
             StreetLogResponse response = streetLogService.createStreetLogFromJson(streetLog);
 
-            Camera camera = cameraRepo.findByCameraIdAndStatusTrue(cameraID).orElseThrow(() -> new AppException(ErrorCode.CAMERA_NOT_FOUND));
+            Video video = videoRepo.findById(videoID).orElseThrow(() ->
+                    new AppException(ErrorCode.VIDEO_NOT_FOUND));
 
-            camera.setVideoUrl(streetLog.getOutput_video_url());
+            video.setVideoUrl(streetLog.getOutput_video_url());
 
-            cameraRepo.save(camera);
+            videoRepo.save(video);
 
             System.out.println("response: " + response);
 

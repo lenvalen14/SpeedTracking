@@ -1,7 +1,6 @@
 package edu.ut.its.services;
 
 import edu.ut.its.exceptions.AppException;
-import edu.ut.its.exceptions.DataNotFoundException;
 import edu.ut.its.exceptions.ErrorCode;
 import edu.ut.its.mappers.CameraMapper;
 import edu.ut.its.models.dtos.requests.CameraCreateRequest;
@@ -16,9 +15,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @Service
 @AllArgsConstructor
@@ -27,8 +23,6 @@ public class CameraService implements ICameraService {
     private final CameraRepo cameraRepo;
     private final StreetRepo streetRepo;
     private final CameraMapper cameraMapper;
-    private final FileUploadService fileUploadService;
-    private final CallAIService callAIService;
 
 
     @Override
@@ -50,7 +44,7 @@ public class CameraService implements ICameraService {
     }
 
     @Override
-    public CameraDetailResponse createCamera(CameraCreateRequest cameraDTO, MultipartFile videoFile) throws IOException {
+    public CameraDetailResponse createCamera(CameraCreateRequest cameraDTO) {
         Street street = streetRepo.findById(cameraDTO.getStreetId())
                 .orElseThrow(() -> new AppException(ErrorCode.STREET_NOT_FOUND));
 
@@ -58,24 +52,12 @@ public class CameraService implements ICameraService {
         camera.setStreet(street);
         camera.setStatus(true);
 
-        if (videoFile != null && !videoFile.isEmpty()) {
-            String videoUrl = fileUploadService.uploadVideo(videoFile);
-            camera.setVideoUrl(videoUrl);
-        }
-
         Camera savedCamera = cameraRepo.save(camera);
 
-        updateStreetCameraCount(street);
+        updateStreetCameraCount(savedCamera.getStreet());
 
-        callAIService.autoDetectSpeed(savedCamera.getVideoUrl(), savedCamera.getStreet().getSpeedLimit(),
-                savedCamera.getStreet().getStreetId(), savedCamera.getCameraId());
-
-        Camera afterCamera = cameraRepo.findByCameraIdAndStatusTrue(savedCamera.getCameraId())
-                .orElseThrow(() -> new AppException(ErrorCode.CAMERA_NOT_FOUND));
-
-        return cameraMapper.toCameraDTO(afterCamera);
+        return cameraMapper.toCameraDTO(savedCamera);
     }
-
 
     @Override
     public CameraDetailResponse updateCamera(String id, CameraUpdateRequest cameraDTO) {

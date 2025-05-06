@@ -12,7 +12,7 @@ import java.io.IOException;
 public interface ICameraService {
     Page<CameraDetailResponse> getAllCameras(Pageable pageable);
     CameraDetailResponse getCameraById(String id);
-    CameraDetailResponse createCamera(CameraCreateRequest cameraDTO, MultipartFile videoFile)  throws IOException;
+    CameraDetailResponse createCamera(CameraCreateRequest cameraDTO);
     CameraDetailResponse updateCamera(String id, CameraUpdateRequest cameraDTO);
     Boolean deleteCamera(String id);
 }

@@ -7,21 +7,15 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
-
-@Document(collection = "cameras")
+@Document(collection = "videos")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Camera {
+public class Video {
     @Id
-    private String cameraId;
+    private String videoId;
+    private String videoUrl;
 
     @DBRef
-    private Street street;
-
-    private boolean status;
-
-    @DBRef
-    private List<Video> video;
+    private Camera camera;
 }

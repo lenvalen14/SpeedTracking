@@ -141,6 +141,27 @@ public enum ErrorCode {
     VIOLATION_DETECTION_ERROR(6400, "Violation detection error", HttpStatus.INTERNAL_SERVER_ERROR),
     VIOLATION_REPORTING_ERROR(6401, "Violation reporting error", HttpStatus.INTERNAL_SERVER_ERROR),
 
+    // ================ VIDEO ERROR CODES (7000-7999) ================
+    // Not Found (7000-7099)
+    VIDEO_NOT_FOUND(7000, "Video not found", HttpStatus.NOT_FOUND),
+    VIDEO_METADATA_NOT_FOUND(7001, "Video metadata not found", HttpStatus.NOT_FOUND),
+    VIDEO_SEGMENT_NOT_FOUND(7002, "Video segment not found", HttpStatus.NOT_FOUND),
+
+    // Already Exists (7100-7199)
+    VIDEO_ALREADY_EXISTS(7100, "Video already exists", HttpStatus.CONFLICT),
+    VIDEO_NAME_ALREADY_EXISTS(7101, "Video with the same name already exists", HttpStatus.CONFLICT),
+
+    // Validation (7200-7299)
+    VIDEO_INVALID_FORMAT(7200, "Invalid video format", HttpStatus.BAD_REQUEST),
+    VIDEO_INVALID_DURATION(7201, "Invalid video duration", HttpStatus.BAD_REQUEST),
+    VIDEO_INVALID_RESOLUTION(7202, "Invalid video resolution", HttpStatus.BAD_REQUEST),
+
+    // System (7400-7499)
+    VIDEO_PROCESSING_ERROR(7400, "Video processing error", HttpStatus.INTERNAL_SERVER_ERROR),
+    VIDEO_UPLOAD_ERROR(7401, "Video upload error", HttpStatus.INTERNAL_SERVER_ERROR),
+    VIDEO_DECODING_ERROR(7402, "Video decoding error", HttpStatus.INTERNAL_SERVER_ERROR),
+    VIDEO_ANALYSIS_ERROR(7403, "Video analysis error", HttpStatus.INTERNAL_SERVER_ERROR),
+
     // ================ GENERAL ERROR CODES (9000-9999) ================
     // Validation (9200-9299)
     VALIDATION_ERROR(9200, "Validation error", HttpStatus.BAD_REQUEST),
