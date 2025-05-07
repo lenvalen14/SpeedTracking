@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class VehicleDTO {
     private String vehicleId;
+    private float speed;
     private String licensePlates;
     private VehicleType type;
     private LocalDateTime createAt;

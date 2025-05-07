@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class Vehicle {
     @Id
     private String vehicleId;
-
+    private float speed;
     private String licensePlates;
     private VehicleType type;
     private boolean priority;
