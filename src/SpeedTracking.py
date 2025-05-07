@@ -23,7 +23,12 @@ cloudinary.config(
 app = FastAPI()
 
 # Khai báo vùng zone để tính tốc độ
-SOURCE = np.array([[1252, 787], [2298, 803], [5039, 2159], [-550, 2159]])
+SOURCE = np.array([
+    [318, 145],
+    [653, 138],
+    [767, 247],
+    [4, 246],
+])
 TARGET_WIDTH, TARGET_HEIGHT = 25, 250
 TARGET = np.array([[0, 0], [TARGET_WIDTH - 1, 0], [TARGET_WIDTH - 1, TARGET_HEIGHT - 1], [0, TARGET_HEIGHT - 1]])
 
@@ -78,7 +83,7 @@ async def detect_speed_from_url(video_url: str = Form(...), speed_limit: float =
         if not download_success:
             return JSONResponse(status_code=500, content={"error": "Failed to download video from URL"})
 
-        model = YOLO("model/yolov8s.pt")
+        model = YOLO("model/yolov8m.pt")
         video_info = sv.VideoInfo.from_video_path(input_path)
         byte_track = sv.ByteTrack(frame_rate=video_info.fps, track_activation_threshold=0.3)
         annotators = {
