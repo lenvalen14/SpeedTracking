@@ -1,5 +1,6 @@
 package edu.ut.its.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,4 @@ public class Camera {
 
     private boolean status;
 
-    @DBRef
-    private List<Video> video;
 }

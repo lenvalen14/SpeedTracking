@@ -3,6 +3,7 @@ package edu.ut.its.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ut.its.mappers.VideoMapper;
 import edu.ut.its.models.dtos.VideoDTO;
+import edu.ut.its.models.dtos.VideoDTOOld;
 import edu.ut.its.response.ResponseWrapper;
 import edu.ut.its.services.VideoService;
 import lombok.AllArgsConstructor;
@@ -26,14 +27,14 @@ public class VideoController {
 
     @GetMapping()
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_OPERATOR')")
-    public ResponseEntity<ResponseWrapper<Page<VideoDTO>>> getAllVideo(
+    public ResponseEntity<ResponseWrapper<Page<VideoDTOOld>>> getAllVideo(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
     {
         Pageable pageable = PageRequest.of(page, size);
-        Page<VideoDTO> responses = videoService.getAllVideo(pageable);
+        Page<VideoDTOOld> responses = videoService.getAllVideoNew(pageable);
 
-        ResponseWrapper<Page<VideoDTO>> responseWrapper;
+        ResponseWrapper<Page<VideoDTOOld>> responseWrapper;
 
         if (responses != null && !responses.isEmpty()) {
             responseWrapper = new ResponseWrapper<>("Data Video Successfully",responses);

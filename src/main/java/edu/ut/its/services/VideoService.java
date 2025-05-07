@@ -4,6 +4,7 @@ import edu.ut.its.exceptions.AppException;
 import edu.ut.its.exceptions.ErrorCode;
 import edu.ut.its.mappers.VideoMapper;
 import edu.ut.its.models.dtos.VideoDTO;
+import edu.ut.its.models.dtos.VideoDTOOld;
 import edu.ut.its.models.entities.Camera;
 import edu.ut.its.models.entities.Video;
 import edu.ut.its.repositories.CameraRepo;
@@ -41,6 +42,21 @@ public class VideoService implements IVideoService {
             System.out.println("Video DTO: " +videoDTO);
         }
         return videos.map(videoMapper::toVideoDTO);
+    }
+    @Override
+    public Page<VideoDTOOld> getAllVideoNew(Pageable pageable) {
+        Page<Video> videos = videoRepo.findAll(pageable);
+
+        if (videos.getTotalElements() == 0) {
+            throw new AppException(ErrorCode.VIDEO_NOT_FOUND);
+        }
+
+        for (Video video : videos.getContent()) {
+            VideoDTO videoDTO = videoMapper.toVideoDTO(video);
+            System.out.println("Video entity: " +video);
+            System.out.println("Video DTO: " +videoDTO);
+        }
+        return videos.map(videoMapper::toVideoDTOOld);
     }
 
     @Override

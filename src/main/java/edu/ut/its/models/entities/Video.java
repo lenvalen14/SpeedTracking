@@ -1,5 +1,6 @@
 package edu.ut.its.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Video {
     @Id
     private String videoId;
+
     private String videoUrl;
 
     @DBRef

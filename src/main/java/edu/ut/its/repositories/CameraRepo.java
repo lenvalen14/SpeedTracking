@@ -1,6 +1,5 @@
 package edu.ut.its.repositories;
 
-import edu.ut.its.models.entities.Account;
 import edu.ut.its.models.entities.Camera;
 import edu.ut.its.models.entities.Street;
 import org.springframework.data.domain.Page;
@@ -17,5 +16,5 @@ public interface CameraRepo extends MongoRepository<Camera, String> {
     Optional<Camera> findByCameraIdAndStatusTrue(String id);
     long countByStreetAndStatusTrue(Street street);
     long countByStreet_StreetIdAndStatusTrue(String streetId);
-    List<Camera> findByStreet_StreetIdAndStatusTrue(String streetId);
+    List<Camera> findByStreet_StreetId(String streetId);
 }
