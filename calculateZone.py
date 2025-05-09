@@ -15,7 +15,7 @@ def click_event(event, x, y, flags, param):
         cv2.imshow("Video", frame)
 
 # ==== Đường dẫn video ====
-VIDEO_PATH = 'video.mp4'  # đổi thành tên video của bạn
+VIDEO_PATH = 'video.mp4'
 cap = cv2.VideoCapture(VIDEO_PATH)
 
 cv2.namedWindow("Video")
