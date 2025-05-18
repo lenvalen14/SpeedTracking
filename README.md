@@ -1,3 +1,4 @@
+
 # 🚓 Hệ Thống Nhận Diện Tốc Độ Phương Tiện (VehicleSpeedDetection)
 
 ## Giới Thiệu
@@ -66,16 +67,18 @@ Dự án bao gồm 3 thành phần chính: **AI**, **Backend**, và **Frontend**
 
 ## 📁 Cấu Trúc Dự Án
 
+```
 SpeedTracking/
-├── AI/ # Thành phần AI
-│ ├── models/ # Các mô hình đã huấn luyện
-│ ├── src/ # Mã nguồn AI
-│ └── requirements.txt
-├── BE/ # Backend
-│ ├── src/ # Mã nguồn BE
-│ ├── pom.xml # Cấu hình Maven
-│ └── README.md
-└── FE/ # Frontend
-├── src/ # Mã nguồn FE
-├── public/ # Tài nguyên công khai
-└── package.json
+├── AI/                 # Thành phần AI
+│   ├── models/         # Các mô hình đã huấn luyện
+│   ├── src/            # Mã nguồn AI
+│   └── requirements.txt
+├── BE/                 # Backend
+│   ├── src/            # Mã nguồn BE
+│   ├── pom.xml         # Cấu hình Maven
+│   └── README.md
+└── FE/                 # Frontend
+    ├── src/            # Mã nguồn FE
+    ├── public/         # Tài nguyên công khai
+    └── package.json
+```
